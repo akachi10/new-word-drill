@@ -72,6 +72,9 @@ public abstract class AbstractCommand implements ICommand {
         }
     }
 
+    /**
+     * 执行命令
+     */
     protected void monitorCommand(){
         while (true){
             String command=input();

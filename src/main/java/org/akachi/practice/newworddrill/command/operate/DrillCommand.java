@@ -46,8 +46,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      */
     private Map<NewWordProxy,Integer> loseWord= new HashMap<>();
 
-
-
     /**
      *吧今天的训练单词加载好
      * -----功能没写完未来加入一个可以输入日期的模式已训练昨日或指定日期的单词
@@ -77,7 +75,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             test(newWordProxy);
         }
     }
-
 
     public void begin(){
         init();
