@@ -2,7 +2,6 @@ package org.akachi.practice.newworddrill.command.operate;
 
 import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Author akachi

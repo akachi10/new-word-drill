@@ -3,6 +3,8 @@ package org.akachi.practice.newworddrill.mapper;
 import org.akachi.practice.newworddrill.entity.NewWord;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -53,6 +55,10 @@ public interface NewWordMapper {
 
     @Select("select * from new_word")
     public List<NewWord> findAll();
+
+
+    @Select("select * from new_word where memory_time>#{beginDate} and memory_time<#{endDate}")
+    public List<NewWord> findAllByDay(LocalDate beginDate, LocalDate endDate);
 
     @Delete("delete from new_word where word=#{word}")
     public int deleteWord(String word);

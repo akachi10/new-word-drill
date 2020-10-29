@@ -6,6 +6,8 @@ import org.akachi.practice.newworddrill.mapper.NewWordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +58,21 @@ public class NewWordService {
      */
     public List<NewWord> findAll(){
         return newWordMapper.findAll();
+    }
+
+    /**
+     * 查询过去的天数
+     * @param formerlyDay 过去一天
+     * @return
+     */
+    public List<NewWord> findWordByTime(int formerlyDay){
+        formerlyDay=formerlyDay*-1;
+        Date date = new Date();
+        LocalDate theDate = LocalDate.now();
+        //如果是昨天就1、如果今天就是0，这里的 theDate和endDate风别表示今天0点和明天0点
+        theDate = theDate.plusDays(formerlyDay);
+        LocalDate endDate = theDate.plusDays(1);
+        return newWordMapper.findAllByDay(theDate,endDate);
     }
 
     /**

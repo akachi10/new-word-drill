@@ -51,11 +51,26 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * -----功能没写完未来加入一个可以输入日期的模式已训练昨日或指定日期的单词
      */
     public void init(){
+        wordList.clear();
         newWordService.findAll().forEach(word->{
             NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
             if(newWordProxy.isDrillDay()){
                 wordList.add(newWordProxy);
             }
+        });
+        shuffle();
+    }
+
+
+    /**
+     *吧今天的训练单词加载好
+     * -----功能没写完未来加入一个可以输入日期的模式已训练昨日或指定日期的单词
+     */
+    private void init(int day){
+        wordList.clear();
+        newWordService.findWordByTime(day).forEach(word->{
+            NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
+            wordList.add(newWordProxy);
         });
         shuffle();
     }
@@ -70,6 +85,10 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }else {
             output("全部训练完成现在重置列表");
             shuffle();
+            if(wordList==null||wordList.size()==0){
+                output("目前没有需要训练的单词");
+                return;
+            }
             wordIterator=wordList.iterator();
             NewWordProxy newWordProxy = wordIterator.next();
             test(newWordProxy);
@@ -78,6 +97,12 @@ public class DrillCommand extends AbstractCommand implements ICommand {
 
     public void begin(){
         init();
+        next();
+    }
+
+    public void beginByDay(String day){
+        Integer dayInt = Integer.parseInt(day);
+        init(dayInt);
         next();
     }
 

@@ -28,17 +28,26 @@ public class WordCommand extends AbstractCommand implements ICommand {
 
     /**
      * 开始创建单词
+     * @param word 单词
      */
-    public void insert(String word){
+    private void insert(String word){
         NewWord newWord = new NewWord();
         newWord.setWord(word);
-       /*newWord.setPhoneticSymbol(input("清输入音标"));*/
-        newWord.setChinese(input("清输入"+word+"中文翻译"));
+       /*newWord.setPhoneticSymbol(input("请输入音标"));*/
+        newWord.setChinese(input("请输入"+word+"中文翻译"));
         show(newWord);
         String s = input("是否存储?y/n");
         if(DrillConstant.YES.equals(s)) {
             save(newWord);
         }
+    }
+
+    /**
+     * 插入单词
+     * @param word 单词
+     */
+    public void i(String word){
+        insert(word);
     }
 
     /**
