@@ -84,11 +84,11 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             test(newWordProxy);
         }else {
             output("全部训练完成现在重置列表");
-            shuffle();
             if(wordList==null||wordList.size()==0){
                 output("目前没有需要训练的单词");
                 return;
             }
+            shuffle();
             wordIterator=wordList.iterator();
             NewWordProxy newWordProxy = wordIterator.next();
             test(newWordProxy);
@@ -216,6 +216,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 随机洗牌
      */
     private void shuffle(){
+        output("现在重新洗牌。");
         if(wordList!=null) {
             Collections.shuffle(wordList);
             wordIterator=wordList.iterator();
