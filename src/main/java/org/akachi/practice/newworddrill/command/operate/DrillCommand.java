@@ -195,18 +195,18 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         renext();
     }
 
-    /**
-     * 直接查询单词中文来进行测试
-     * @param chinese
-     */
-    public void test(String chinese){
-        NewWord newWord= newWordService.findWordByChinese(chinese);
-        if(newWord!=null){
-            test(NewWordProxy.getInstance(newWord));
-        }else{
-            output("没有中文含义为'"+chinese+"'的单词");
-        }
-    }
+//    /**
+//     * 直接查询单词中文来进行测试
+//     * @param chinese
+//     */
+//    public void test(String chinese){
+//        NewWord newWord= newWordService.findWordByChinese(chinese);
+//        if(newWord!=null){
+//            test(NewWordProxy.getInstance(newWord));
+//        }else{
+//            output("没有中文含义为'"+chinese+"'的单词");
+//        }
+//    }
 
     /**
      * 测试主方法

@@ -5,6 +5,7 @@ import org.akachi.practice.newworddrill.entity.DrillConstant;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.Scanner;
 
 /**
@@ -22,24 +23,45 @@ public abstract class AbstractCommand implements ICommand {
         this.help();
         this.monitorCommand();
     }
+
+    /**
+     * 帮助
+     * 会打印所有帮助内容
+     */
     @Override
     public void help(){
         output(AbstractCommand.ANNOTATION+this.introduce()+AbstractCommand.ANNOTATION);
         StringBuffer sb = new StringBuffer();
         sb.append("可以执行以下" +
-                "命令["+ DrillConstant.HELP);
+                "命令["+ DrillConstant.HELP+"()");
         for(Method method:this.getClass().getDeclaredMethods()){
+            StringBuffer params = new StringBuffer();
+            Parameter[] parameters = method.getParameters();
+            boolean isFirst = true;
+            for(Parameter param:parameters){
+                if(isFirst) {
+                    params.append(param.getName() );
+                }else{
+                    params.append(",");
+                    params.append(param.getName());
+                }
+                isFirst=false;
+            }
             /*确定其权限为public修饰符方法则使用*/
             if(Modifier.isPublic(method.getModifiers())
                     &&!DrillConstant.START.equals(method.getName())
                     &&!DrillConstant.INTRODUCE.equals(method.getName())) {
-                sb.append(","+method.getName());
+                sb.append(","+method.getName()+"("+params.toString()+")");
             }
         }
         sb.append("]");
         output(sb.toString());
     }
 
+    /**
+     * 执行命令
+     * @param commandName 命令名称
+     */
     protected void runCommand(String commandName) {
         try {
             if(DrillConstant.START.equals(commandName)){
