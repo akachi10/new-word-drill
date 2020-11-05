@@ -1,13 +1,10 @@
 package org.akachi.practice.newworddrill.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,10 +16,13 @@ import java.util.GregorianCalendar;
  * @Date 2020/10/1 15:57
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class NewWordProxy extends NewWord{
 
     private NewWordProxy(){
     }
+
     /**
      * 失败计数器
      */

@@ -95,15 +95,104 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
     }
 
-    public void begin(){
+    /**
+     * 开始测试
+     */
+    private void renext(){
+        if(wordIterator.hasNext()) {
+            NewWordProxy newWordProxy = wordIterator.next();
+            retest(newWordProxy);
+        }else {
+            output("全部训练完成现在重置列表");
+            if(wordList==null||wordList.size()==0){
+                output("目前没有需要训练的单词");
+                return;
+            }
+            shuffle();
+            wordIterator=wordList.iterator();
+            NewWordProxy newWordProxy = wordIterator.next();
+            retest(newWordProxy);
+        }
+    }
+
+    /**
+     * 逆测试单词
+     * @param newWordProxy 新的单词代理 要测试的单词
+     */
+    private void retest(NewWordProxy newWordProxy){
+        /*测试输入与输出*/
+        if(examCount%DrillConstant.HINT_RATING==0){
+            output("如果要结束测试输入'"+DrillConstant.TEST_END+"'!");
+        }
+        output("请输入'"+newWordProxy.getWord()+"'的翻译");
+        String wordTest=input();
+        if(DrillConstant.TEST_END.equals(wordTest)||DrillConstant.END_TEST.equals(wordTest)){
+            testReport();
+            return;
+        }
+        //在这里打印正确答案
+        output("正确翻译是'"+newWordProxy.getChinese()+"'，您们的翻译是"+wordTest+"");
+        String flag = null;
+        if(!newWordProxy.getChinese().equals(wordTest)) {
+            flag = input("如果输入正确请直接回车");
+        }
+        this.examCount++;
+        if (null == flag||"".equals(flag)){
+            /*测试成功则单词测试次数+1并且清零失败次数*/
+            newWordProxy.setDrillCount(+1);
+            /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
+            this.successDrillCount++;
+            output("正确翻译!");
+            renext();
+        }else {
+            output("错误翻译!");
+            /*如果测试失败记录失败次数并且递归重新测试*/
+            this.loseDrilCount++;
+            if(loseWord.get(newWordProxy)!=null){
+                loseWord.put(newWordProxy,loseWord.get(newWordProxy)+1);
+            }else{
+                loseWord.put(newWordProxy,1);
+            }
+            renext();
+            /*判断是否需要提示*/
+            /*测试*/
+        }
+    }
+
+    /**
+     * 练习
+     */
+    public void drill(){
         init();
         next();
     }
 
-    public void beginByDay(String day){
+    /**
+     * 训练某一天
+     * @param day
+     */
+    public void byDay(String day){
         Integer dayInt = Integer.parseInt(day);
         init(dayInt);
         next();
+    }
+
+    /**
+     * 逆练某一天
+     * @param day
+     */
+    public void reByDay(String day){
+        Integer dayInt = Integer.parseInt(day);
+        init(dayInt);
+        renext();
+    }
+
+    /**
+     * 逆练
+     */
+    public void redrill(){
+        init();
+        renext();
     }
 
     /**
