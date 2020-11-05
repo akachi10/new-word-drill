@@ -8,7 +8,7 @@
 
 application-dev.properties中关键参数介绍
 
-drill.magnitude=1.7 //间隔指数 y=x^magnitude(y下次训练的天数 ，x是单词训练的次数 magnitude是系数)单词没成功训练一次X就会+1 每次训练间隔时间增加。
+drill.magnitude=1.7 //间隔指数 y=x^magnitude (y是下次训练的天数 ，x是单词训练的次数 magnitude是系数) 单词每成功训练一次x就会+1 每次训练间隔时间增加。
 
 drill.loseMinCount=3 //训练或测验时失败的次数，超过这个次数无法真确拼写则表示失败。
 
