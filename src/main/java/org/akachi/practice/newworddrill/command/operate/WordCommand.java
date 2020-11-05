@@ -32,6 +32,9 @@ public class WordCommand extends AbstractCommand implements ICommand {
      */
     private void insert(String word){
         NewWord newWord = new NewWord();
+        if(word!=null&&word.length()>0){
+            word = word.replace("_"," ");
+        }
         newWord.setWord(word);
        /*newWord.setPhoneticSymbol(input("请输入音标"));*/
         newWord.setChinese(input("请输入"+word+"中文翻译"));

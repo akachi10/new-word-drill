@@ -37,6 +37,7 @@ public class MainCommand extends AbstractCommand implements ICommand {
                     Class clazz = Class.forName("org.akachi.practice.newworddrill.command.operate."+upperFirstLatter(command)+"Command");
                     ICommand iCommand = (ICommand)clazz.newInstance();
                     iCommand.start();
+                    this.help();
                 } catch (ClassNotFoundException e) {
                     output("命令["+command+"]不存在");
                 } catch (IllegalAccessException | InstantiationException e) {
@@ -48,6 +49,9 @@ public class MainCommand extends AbstractCommand implements ICommand {
         }
     }
 
+    /**
+     * 重写入了help
+     */
     @Override
     public void help() {
         output(AbstractCommand.ANNOTATION+this.introduce()+AbstractCommand.ANNOTATION);
