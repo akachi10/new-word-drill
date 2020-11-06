@@ -19,8 +19,12 @@ public class NewWordDrillApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         /*System.out.println("程序实际上的入口在这里。");*/
         Class clazz = Class.forName("org.akachi.practice.newworddrill.command.operate."+ DrillConfig.DRILL_DEFAULT_COMMAND+"Command");
-        Method method = clazz.getMethod(DrillConfig.DRILL_DEFAULT_FUNCTION);
-        method.invoke(clazz.newInstance());
+        try {
+            Method method = clazz.getMethod(DrillConfig.DRILL_DEFAULT_FUNCTION);
+            method.invoke(clazz.newInstance());
+        }catch (NoSuchMethodException e){
+            System.out.println("[MainCommand]:'DRILL_DEFAULT_FUNCTION'未设置，系统不会自动启动测试。");
+        }
 
         ICommand ic = new MainCommand();
         ic.start();

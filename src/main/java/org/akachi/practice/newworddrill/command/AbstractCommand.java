@@ -37,21 +37,15 @@ public abstract class AbstractCommand implements ICommand {
         for(Method method:this.getClass().getDeclaredMethods()){
             StringBuffer params = new StringBuffer();
             Parameter[] parameters = method.getParameters();
-            boolean isFirst = true;
             for(Parameter param:parameters){
-                if(isFirst) {
-                    params.append(param.getName() );
-                }else{
-                    params.append(" ");
-                    params.append(param.getName());
-                }
-                isFirst=false;
+                params.append(" ");
+                params.append(param.getName());
             }
             /*确定其权限为public修饰符方法则使用*/
             if(Modifier.isPublic(method.getModifiers())
                     &&!DrillConstant.START.equals(method.getName())
                     &&!DrillConstant.INTRODUCE.equals(method.getName())) {
-                sb.append(","+method.getName()+" "+params.toString());
+                sb.append(","+method.getName()+params.toString());
             }
         }
         sb.append("]");
@@ -173,4 +167,5 @@ public abstract class AbstractCommand implements ICommand {
         }
         return s;
     }
+
 }

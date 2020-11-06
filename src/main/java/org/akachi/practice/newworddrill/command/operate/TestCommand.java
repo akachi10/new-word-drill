@@ -19,7 +19,6 @@ public class TestCommand extends AbstractCommand {
     public void testConfig(){
         System.out.println("LOSE_MAX_COUNT:"+ DrillConfig.LOSE_MAX_COUNT+
                 ";LOSE_MIN_COUNT:"+DrillConfig.LOSE_MIN_COUNT+
-                ";MAGINTUDE:"+DrillConfig.MAGNITUDE+
-                ";TOTAL_DRILL_COUNT:"+DrillConfig.TOTAL_DRILL_COUNT+";");
+                ";MAGINTUDE:"+DrillConfig.MAGNITUDE);
     }
 }

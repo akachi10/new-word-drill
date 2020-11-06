@@ -3,8 +3,10 @@ package org.akachi.practice.newworddrill.entity;
 public class DrillConstant {
     public static final String END_TEST="endTest";
     public static final String TEST_END="testEnd";
+    public static final String TEST_CONTINUE="testCon";
     public static final String END="end";
     public static final String EXIT="exit";
+
     public static final String HELP="help";
     public static final String START="start";
     public static final String INTRODUCE="introduce";
