@@ -321,6 +321,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             retest(newWordProxy);
         }else {
             output("全部训练完成现在重置列表");
+            testReport();
             if(wordList==null||wordList.size()==0){
                 output("目前没有需要训练的单词");
                 return;
