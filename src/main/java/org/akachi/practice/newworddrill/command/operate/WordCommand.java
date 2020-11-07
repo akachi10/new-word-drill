@@ -137,7 +137,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
             newWord.setWord(input("清输入单词", newWord.getWord()));
             newWord.setPhoneticSymbol(input("清输入音标", newWord.getPhoneticSymbol()));
             newWord.setChinese(input("清输入中文翻译", newWord.getChinese()));
-            newWordService.update(newWord,word);
+            newWordService.alter(newWord,word);
             show(newWord);
         }
     }

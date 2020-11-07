@@ -103,10 +103,8 @@ public class ExamCommand extends AbstractCommand {
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测验失败*/
             if (newWordProxy.getLoseCount() < DrillConfig.LOSE_MIN_COUNT) {
                 /*一旦成功就保存*/
-                newWordProxy.setSuccessCount(newWordProxy.getSuccessCount() + 1);
-                newWordProxy.setLastMemoryTime(new Date(System.currentTimeMillis()));
                 successWord.add(newWordProxy);
-                newWordService.update(newWordProxy);
+                newWordService.successMemory(newWordProxy);
             }
             newWordProxy.setLoseCount(0);
             next();
@@ -116,10 +114,8 @@ public class ExamCommand extends AbstractCommand {
             newWordProxy.setLoseCount(newWordProxy.getLoseCount()+1);
             /*为了防止作弊一旦失败次数与设定次数相等时就保存*/
             if (newWordProxy.getLoseCount()== DrillConfig.LOSE_MIN_COUNT) {
-                newWordProxy.setLetheCount(newWordProxy.getLetheCount()+1);
-                newWordProxy.setLastLetheTime(new Date(System.currentTimeMillis()));
                 loseWord.add(newWordProxy);
-                newWordService.update(newWordProxy);
+                newWordService.loseMemory(newWordProxy);
             }
             /*判断是否需要提示*/
             hint(newWordProxy);

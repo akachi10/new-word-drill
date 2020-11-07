@@ -17,8 +17,9 @@ public interface NewWordMapper {
             "last_lethe_time, " +
             "lethe_count," +
             "last_memory_time," +
+            "create_time," +
             "success_count" +
-            ")  VALUES(#{word},#{phoneticSymbol},#{chinese}, NOW(),NOW(),0,NOW(),0)")
+            ")  VALUES(#{word},#{phoneticSymbol},#{chinese}, NOW(),NOW(),0,NOW(),NOW(),0)")
     public int insert(NewWord newWord);
 
     @Update("update new_word set " +
@@ -29,6 +30,7 @@ public interface NewWordMapper {
             "last_lethe_time=#{lastLetheTime}," +
             "lethe_count=#{letheCount}," +
             "last_memory_time=#{lastMemoryTime}," +
+            "create_time=#{createTime}," +
             "success_count=#{successCount} " +
             "where word=#{word}")
     public int update(NewWord newWord);
@@ -42,6 +44,7 @@ public interface NewWordMapper {
             "last_lethe_time=#{newWord.lastLetheTime}," +
             "lethe_count=#{newWord.letheCount}," +
             "last_memory_time=#{newWord.lastMemoryTime}," +
+            "create_time=#{newWord.createTime}," +
             "success_count=#{newWord.successCount} " +
             "where word=#{oldWord}")
     public int updateByWord(NewWord newWord,String oldWord);

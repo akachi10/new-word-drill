@@ -22,7 +22,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     private NewWordService newWordService=(NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
 
     private int successDrillCount;
-    private int loseDrilCount;
+    private int loseDrillCount;
 
     private int examCount;
     @Override
@@ -51,6 +51,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      */
     public void init(){
         wordList.clear();
+        loseWord.clear();
         newWordService.findAll().forEach(word->{
             NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
             if(newWordProxy.isDrillDay()){
@@ -151,6 +152,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             test(newWordProxy);
         }else {
             output("全部训练完成现在重置列表");
+            testReport();
             if(wordList==null||wordList.size()==0){
                 output("目前没有需要训练的单词");
                 return;
@@ -190,6 +192,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
                         newWordProxyList.addAll(addList);
                     }
                 }else if(testFruit==-2){
+                    crawlReport();
                     output("爬虫训练结束");
                     break;
                 }else if(testFruit==-3){
@@ -200,6 +203,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
                 }
             }else{
                 output("全部训练完成现在重置列表");
+                crawlReport();
                 if(day==-1){
                     init();
                 }else {
@@ -219,7 +223,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         output("请输入'"+newWordProxy.getChinese()+"'的单词");
         String wordTest=input();
         if(DrillConstant.TEST_END.equals(wordTest)||DrillConstant.END_TEST.equals(wordTest)){
-            testReport();
             return -2;
         }else if(DrillConstant.TEST_CONTINUE.equals(wordTest)){
             return -3;
@@ -231,7 +234,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             output("正确!");
             newWordProxy.setDrillCount(newWordProxy.getDrillCount()+1);
         }else{
-            loseDrilCount++;
+            loseDrillCount++;
             output("错误!正确的单词是'"+newWordProxy.getWord()+"'。");
             newWordProxy.setDrillCount(0);
             newWordProxy.setLoseCount(newWordProxy.getLoseCount()+1);
@@ -287,7 +290,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             newWordProxy.setDrillCount(newWordProxy.getDrillCount()+1);
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
             if(newWordProxy.getLoseCount()>=DrillConfig.LOSE_MIN_COUNT){
-                this.loseDrilCount++;
+                this.loseDrillCount++;
                 if(loseWord.get(newWordProxy)!=null){
                     loseWord.put(newWordProxy,loseWord.get(newWordProxy)+1);
                 }else{
@@ -361,7 +364,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }else {
             output("错误翻译!");
             /*如果测试失败记录失败次数并且递归重新测试*/
-            this.loseDrilCount++;
+            this.loseDrillCount++;
             if(loseWord.get(newWordProxy)!=null){
                 loseWord.put(newWordProxy,loseWord.get(newWordProxy)+1);
             }else{
@@ -393,12 +396,12 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 报告
      */
     private void testReport(){
-        if(loseDrilCount+this.successDrillCount!=0){
-            float accuracy = (this.successDrillCount+0)/(this.loseDrilCount+this.successDrillCount+0f);
+        if(loseDrillCount+this.successDrillCount!=0){
+            float accuracy = (this.successDrillCount+0)/(this.loseDrillCount+this.successDrillCount+0f);
             int i =0;
             output("#######################训练报告##########################");
             output("本次测试正确率为"+StringUtil.format2(accuracy*100)+"%");
-            output("成功数"+this.successDrillCount+",失败数"+this.loseDrilCount+".");
+            output("成功数"+this.successDrillCount+",失败数"+this.loseDrillCount+".");
             output("错误单词TOP10");
             for(Map.Entry<NewWordProxy, Integer> nwp: loseWord.entrySet()){
                 i++;
@@ -408,8 +411,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
                 output("'"+nwp.getKey().getWord()+"'错误"+nwp.getValue()+"次。");
             }
             output("#######################################################");
-            loseWord.clear();
-            this.loseDrilCount=0;
+            this.loseDrillCount=0;
             this.successDrillCount=0;
         }
     }
@@ -419,13 +421,14 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 爬虫报告
      */
     private void crawlReport(){
-        if(loseDrilCount+this.successDrillCount!=0){
-            float accuracy = (this.successDrillCount+0)/(this.loseDrilCount+this.successDrillCount+0f);
+        if(loseDrillCount+this.successDrillCount!=0){
+            float accuracy = (this.successDrillCount+0)/(this.loseDrillCount+this.successDrillCount+0f);
             int i =0;
             output("#######################爬虫训练报告##########################");
             output("本次测试正确率为"+StringUtil.format2(accuracy*100)+"%");
+            output("成功数"+this.successDrillCount+",失败数"+this.loseDrillCount+".");
             output("###########################################################");
-            this.loseDrilCount=0;
+            this.loseDrillCount=0;
             this.successDrillCount=0;
         }
     }

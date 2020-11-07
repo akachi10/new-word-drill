@@ -48,6 +48,7 @@ public class NewWordProxy extends NewWord{
         newWordProxy.setLastLetheTime(newWord.getLastLetheTime());
         newWordProxy.setLetheCount(newWord.getLetheCount());
         newWordProxy.setSuccessCount(newWord.getSuccessCount());
+        newWordProxy.setCreateTime(newWord.getCreateTime());
         return newWordProxy;
     }
 
@@ -93,20 +94,14 @@ public class NewWordProxy extends NewWord{
                 /*如果在今天测成功那今天也是练习日*/
                 || DateUtils.isSameDay(theDate, memoryTime);
     }
-    /**
-     * 获得总测试次数
-     * @return 总测试成功次数
-     */
-    private int getTestCount(){
-        return Math.max(successCount - letheCount, 1);
-    }
 
     /**
      * 获得下一次测试时间
      * @return 多少天之后
      */
     private int getNextTestDay(){
-        return new Double(Math.pow(getTestCount(), DrillConfig.MAGNITUDE)).intValue();
+        int testCount = Math.max(successCount - letheCount, 1);
+        return new Double(Math.pow(testCount, DrillConfig.MAGNITUDE)).intValue();
     }
 
 //    /**

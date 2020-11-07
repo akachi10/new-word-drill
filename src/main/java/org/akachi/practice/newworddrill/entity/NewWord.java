@@ -23,6 +23,9 @@ public class NewWord {
     /**最后成功(最后测试)*/
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     protected Date lastMemoryTime;
+    /**创建时间*/
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    protected Date createTime;
     /**失败次数*/
     protected int letheCount;
     /**成功次数 成功次数-失败次数(小于0则为0)会决定下一次测试时间*/
