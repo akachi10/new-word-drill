@@ -151,6 +151,7 @@ public class ExamCommand extends AbstractCommand {
             int i =0;
             output("#######################测验报告##########################");
             output("本次测验正确率为"+StringUtil.format2(accuracy*100)+"%");
+            output("成功数"+successWord.size()+",失败数"+loseWord.size()+".");
             output("错误单词TOP10");
             StringBuffer sb = new StringBuffer();
             sb.append("测验失败单词[");

@@ -73,7 +73,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 训练某一天
      * @param day
      */
-    public void buday(String day){
+    public void drill(String day){
         Integer dayInt=0;
         try {
             dayInt = Integer.parseInt(day);
@@ -95,7 +95,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 逆练某一天
      * @param day
      */
-    public void rebyday(String day){
+    public void redrill(String day){
         Integer dayInt=0;
         try {
             dayInt = Integer.parseInt(day);
@@ -107,9 +107,17 @@ public class DrillCommand extends AbstractCommand implements ICommand {
 
 
     /**
+     * 爬行训练所有单词
+     */
+    public void crawl(){
+        init();
+        crawltest(-1);
+    }
+
+    /**
      * 爬行训练某一天
      */
-    public void crawlbyday(String day){
+    public void crawl(String day){
         Integer dayInt=0;
         try {
             dayInt = Integer.parseInt(day);
@@ -120,13 +128,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         crawltest(dayInt);
     }
 
-    /**
-     * 爬行训练所有单词
-     */
-    public void crawl(){
-        init();
-        crawltest(-1);
-    }
 
     /**
      *吧今天的训练单词加载好
@@ -397,6 +398,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             int i =0;
             output("#######################训练报告##########################");
             output("本次测试正确率为"+StringUtil.format2(accuracy*100)+"%");
+            output("成功数"+this.successDrillCount+",失败数"+this.loseDrilCount+".");
             output("错误单词TOP10");
             for(Map.Entry<NewWordProxy, Integer> nwp: loseWord.entrySet()){
                 i++;
