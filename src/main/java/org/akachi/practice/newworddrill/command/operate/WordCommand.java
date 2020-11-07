@@ -5,8 +5,12 @@ import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWord;
+import org.akachi.practice.newworddrill.entity.NewWordProxy;
 import org.akachi.practice.newworddrill.util.JSONChangeUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author akachi
@@ -86,6 +90,23 @@ public class WordCommand extends AbstractCommand implements ICommand {
         }
         show(newWord);
     }
+
+    /**
+     * 打印单词列表
+     * @param day
+     */
+    public void list(String day){
+        Integer dayInt = null;
+        try {
+            dayInt = Integer.parseInt(day);
+        }catch (Exception e){
+            output("请输入数字!");
+        }
+        newWordService.findWordByTime(dayInt).forEach(word->{
+            output(word.getWord()+"\t\t"+word.getChinese()+";");
+        });
+    }
+
 
     /**
      * 查看特定单词
