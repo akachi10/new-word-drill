@@ -235,7 +235,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }else{
             loseDrillCount++;
             output("错误!正确的单词是'"+newWordProxy.getWord()+"'。");
-            newWordProxy.setDrillCount(0);
+            newWordProxy.setDrillCount(newWordProxy.getDrillCount()-1);
             newWordProxy.setLoseCount(newWordProxy.getLoseCount()+1);
         }
         return 0;
