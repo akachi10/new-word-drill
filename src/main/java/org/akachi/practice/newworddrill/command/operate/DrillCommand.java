@@ -51,7 +51,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      */
     public void init(){
         wordList.clear();
-        loseWord.clear();
         newWordService.findAll().forEach(word->{
             NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
             if(newWordProxy.isDrillDay()){
@@ -176,7 +175,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         while (true){
             NewWordProxy newWordProxy=null;
-            if(newWordProxyList!=null&&newWordProxyList.size()>0) {
+            if(newWordProxyList.size()>0) {
                 Collections.shuffle(newWordProxyList);
                 newWordProxy = newWordProxyList.get(0);
             }
@@ -216,8 +215,8 @@ public class DrillCommand extends AbstractCommand implements ICommand {
 
     /**
      * 测试一个单词
-     * @param newWordProxy
-     * @return
+     * @param newWordProxy 新单词
+     * @return -2 爬虫训练结束 -3 跳过单词 0正常训练
      */
     private int crawlWord(NewWordProxy newWordProxy){
         output("请输入'"+newWordProxy.getChinese()+"'的单词");
@@ -239,7 +238,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             newWordProxy.setDrillCount(0);
             newWordProxy.setLoseCount(newWordProxy.getLoseCount()+1);
         }
-        return -1;
+        return 0;
     }
 
     /**
@@ -415,6 +414,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             this.loseDrillCount=0;
             this.successDrillCount=0;
         }
+        loseWord.clear();
     }
 
 
@@ -432,6 +432,8 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             this.loseDrillCount=0;
             this.successDrillCount=0;
         }
+        //爬虫训练并不关心错误单词
+//        loseWord.clear();
     }
 
     /**
