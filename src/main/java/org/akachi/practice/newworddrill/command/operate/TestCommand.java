@@ -13,7 +13,7 @@ public class TestCommand extends AbstractCommand {
 
     @Override
     public String introduce() {
-        return "测试命令";
+        return "测试命令="+DrillConfig.FLAG;
     }
 
     public void testConfig(){

@@ -27,7 +27,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     private int examCount;
     @Override
     public String introduce() {
-        return "执行训练";
+        return "执行训练="+DrillConfig.FLAG;
     }
 
     /**

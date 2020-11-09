@@ -14,6 +14,7 @@ public class NewWord {
     protected String word;
     protected String phoneticSymbol;
     protected String chinese;
+    protected String flag;
     /**录入时间 一直用录入时间测试*/
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     protected Date memoryTime;

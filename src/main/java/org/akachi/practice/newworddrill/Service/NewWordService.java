@@ -36,7 +36,7 @@ public class NewWordService {
      * @return 更新调数
      */
     public int alter(NewWord newWord,String oldWord){
-        return newWordMapper.updateByWord(newWord,oldWord);
+        return newWordMapper.updateByWord(newWord,oldWord,DrillConfig.FLAG);
     }
     /**
      * 插入一个新单词
@@ -52,7 +52,7 @@ public class NewWordService {
      * @return 单词对象
      */
     public NewWord findWord(String word) {
-        return newWordMapper.findWord(word);
+        return newWordMapper.findWord(word,DrillConfig.FLAG);
     }
 
     /**
@@ -60,7 +60,7 @@ public class NewWordService {
      * @return 所有单词
      */
     public List<NewWord> findAll(){
-        return newWordMapper.findAll();
+        return newWordMapper.findAll(DrillConfig.FLAG);
     }
 
     /**
@@ -75,7 +75,7 @@ public class NewWordService {
         //如果是昨天就1、如果今天就是0，这里的 theDate和endDate风别表示今天0点和明天0点
         theDate = theDate.plusDays(formerlyDay);
         LocalDate endDate = theDate.plusDays(1);
-        return newWordMapper.findAllByDay(theDate,endDate);
+        return newWordMapper.findAllByDay(theDate,endDate,DrillConfig.FLAG);
     }
 
     /**
@@ -84,7 +84,7 @@ public class NewWordService {
      * @return 第一个符合的中文单词
      */
     public NewWord findWordByChinese(String chinese){
-        List<NewWord> newWordList = newWordMapper.findWordByChinese(chinese);
+        List<NewWord> newWordList = newWordMapper.findWordByChinese(chinese,DrillConfig.FLAG);
         if(newWordList!=null&&newWordList.size()>0){
             return newWordList.get(0);
         }
@@ -96,7 +96,7 @@ public class NewWordService {
      * @return 删除几条 如果单词存在返回1
      */
     public int deleteWord(String word){
-        return newWordMapper.deleteWord(word);
+        return newWordMapper.deleteWord(word,DrillConfig.FLAG);
     }
 
 //    /**

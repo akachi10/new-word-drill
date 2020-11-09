@@ -49,6 +49,7 @@ public class NewWordProxy extends NewWord{
         newWordProxy.setLetheCount(newWord.getLetheCount());
         newWordProxy.setSuccessCount(newWord.getSuccessCount());
         newWordProxy.setCreateTime(newWord.getCreateTime());
+        newWordProxy.setFlag(newWord.getFlag());
         return newWordProxy;
     }
 

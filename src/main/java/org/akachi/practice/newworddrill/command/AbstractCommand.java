@@ -1,5 +1,6 @@
 package org.akachi.practice.newworddrill.command;
 
+import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 
 import java.lang.reflect.InvocationTargetException;
@@ -108,14 +109,14 @@ public abstract class AbstractCommand implements ICommand {
      * @param output 输出内容
      */
     protected void output(String output){
-        System.out.println("["+this.getClass().getSimpleName()+"]:"+output);
+        System.out.println("["+this.getClass().getSimpleName()+"#"+DrillConfig.FLAG+"]:"+output);
     }
 
     /**
      * 等待输入时输出
      */
     protected void output(){
-        System.out.print("["+this.getClass().getSimpleName()+"]:");
+        System.out.print("["+this.getClass().getSimpleName()+"#"+DrillConfig.FLAG+"]:");
     }
 
     /**
@@ -167,5 +168,4 @@ public abstract class AbstractCommand implements ICommand {
         }
         return s;
     }
-
 }

@@ -18,6 +18,7 @@ public class DrillConfig {
     public static String DRILL_DEFAULT_FUNCTION;
     public static Integer DRILL_CRAWL_LENGTH;
     public static Integer DRILL_CRAWL_REPEAT;
+    public static String FLAG;
 
 
     @Value("${drill.magnitude}")
@@ -60,4 +61,8 @@ public class DrillConfig {
         this.DRILL_CRAWL_REPEAT = DRILL_CRAWL_REPEAT;
     }
 
+    @Value("${drill.default.flag}")
+    public void setFLAG(String flag){
+        this.FLAG= flag;
+    }
 }

@@ -1,5 +1,6 @@
 package org.akachi.practice.newworddrill.command;
 
+import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.util.ClassUtil;
 
@@ -14,13 +15,29 @@ public class MainCommand extends AbstractCommand implements ICommand {
         super.start();
     }
 
+    public void setFlag(String flag){
+        DrillConfig.FLAG=flag;
+    }
     /**
-     * 首字母大写
-     * @param letter 转换字符串
-     * @return 帕斯卡命名法后的字符串
+     * 重写入了help
      */
-    private String upperFirstLatter(String letter){
-        return letter.substring(0, 1).toUpperCase()+letter.substring(1);
+    @Override
+    public void help() {
+        output(AbstractCommand.ANNOTATION+this.introduce()+AbstractCommand.ANNOTATION);
+        StringBuffer sb = new StringBuffer();
+        sb.append("可以执行以下命令["+DrillConstant.END+","+DrillConstant.HELP+","+DrillConstant.FLAG);
+        ClassUtil.getAllClassByInterface(ICommand.class).forEach(clazz->{
+            if(!clazz.equals(AbstractCommand.class)&&!clazz.equals(MainCommand.class)){
+                sb.append(",").append(clazz.getSimpleName().toLowerCase().replace("command",""));
+            }
+        });
+        sb.append("]");
+        output(sb.toString());
+    }
+
+    @Override
+    public String introduce() {
+        return "启动单词测试="+DrillConfig.FLAG;
     }
     @Override
     public void monitorCommand(){
@@ -28,6 +45,11 @@ public class MainCommand extends AbstractCommand implements ICommand {
             String command=input();
             if (command==null||"".equals(command)){
                 continue;
+            }else if(command.split(" ").length==2&&
+                    "flag".equals(command.split(" ")[0])&&
+                    !"".equals(command.split(" ")[1])) {
+                DrillConfig.FLAG = command.split(" ")[1];
+                output("已经设置flag为'" + command.split(" ")[1] + "'");
             }else if(DrillConstant.END.equals(command)||DrillConstant.EXIT.equals(command)){
                 break;
             }else if(DrillConstant.HELP.equals(command)){
@@ -50,25 +72,13 @@ public class MainCommand extends AbstractCommand implements ICommand {
     }
 
     /**
-     * 重写入了help
+     * 首字母大写
+     * @param letter 转换字符串
+     * @return 帕斯卡命名法后的字符串
      */
-    @Override
-    public void help() {
-        output(AbstractCommand.ANNOTATION+this.introduce()+AbstractCommand.ANNOTATION);
-        StringBuffer sb = new StringBuffer();
-        sb.append("可以执行以下命令["+DrillConstant.END+","+DrillConstant.HELP+"");
-        ClassUtil.getAllClassByInterface(ICommand.class).forEach(clazz->{
-            if(!clazz.equals(AbstractCommand.class)&&!clazz.equals(MainCommand.class)){
-                sb.append(",").append(clazz.getSimpleName().toLowerCase().replace("command",""));
-            }
-        });
-        sb.append("]");
-        output(sb.toString());
+    private String upperFirstLatter(String letter){
+        return letter.substring(0, 1).toUpperCase()+letter.substring(1);
     }
 
-    @Override
-    public String introduce() {
-        return "启动单词测试";
-    }
 
 }

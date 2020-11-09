@@ -3,6 +3,7 @@ package org.akachi.practice.newworddrill.command.operate;
 import org.akachi.practice.newworddrill.Service.NewWordService;
 import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.command.ICommand;
+import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWord;
 import org.akachi.practice.newworddrill.entity.NewWordProxy;
@@ -36,6 +37,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
      */
     private void insert(String word){
         NewWord newWord = new NewWord();
+        newWord.setFlag(DrillConfig.FLAG);
         if(word!=null&&word.length()>0){
             word = word.replace("_"," ");
         }
@@ -82,6 +84,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
             newWordService.memoryWord(newWord);
             newWord = newWordService.findWord(newWord.getWord());
         }catch(Exception e){
+            e.printStackTrace();
             if (newWord == null) {
                 output("尚未开始创建单词");
             } else {
@@ -128,6 +131,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
     }
     /**
      * 修改所有参数
+     * @param word 单词
      */
     public void alter(String word){
         NewWord newWord =  newWordService.findWord(word);
@@ -165,6 +169,6 @@ public class WordCommand extends AbstractCommand implements ICommand {
 
     @Override
     public String introduce() {
-        return "操作生词";
+        return "操作生词="+DrillConfig.FLAG;
     }
 }

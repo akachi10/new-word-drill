@@ -22,7 +22,7 @@ public class ExamCommand extends AbstractCommand {
 
     @Override
     public String introduce() {
-        return "执行测验";
+        return "执行测验="+DrillConfig.FLAG;
     }
 
     /**
