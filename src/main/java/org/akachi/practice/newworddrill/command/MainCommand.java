@@ -25,7 +25,7 @@ public class MainCommand extends AbstractCommand implements ICommand {
     public void help() {
         output(AbstractCommand.ANNOTATION+this.introduce()+AbstractCommand.ANNOTATION);
         StringBuffer sb = new StringBuffer();
-        sb.append("可以执行以下命令["+DrillConstant.END+","+DrillConstant.HELP+","+DrillConstant.FLAG);
+        sb.append("可以执行以下命令["+DrillConstant.END+","+DrillConstant.HELP+","+DrillConstant.FLAG+" flag");
         ClassUtil.getAllClassByInterface(ICommand.class).forEach(clazz->{
             if(!clazz.equals(AbstractCommand.class)&&!clazz.equals(MainCommand.class)){
                 sb.append(",").append(clazz.getSimpleName().toLowerCase().replace("command",""));
