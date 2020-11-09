@@ -184,7 +184,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
                 int testFruit=crawlWord(newWordProxy);
                 if(testFruit==0){
                     //小于最大重复训练次数
-                    if(newWordProxy.getDrillCount()>DrillConfig.DRILL_CRAWL_REPEAT){
+                    if(newWordProxy.getDrillCount()==DrillConfig.DRILL_CRAWL_REPEAT){
                         //否则remove这个单词
                         newWordProxyList.remove(newWordProxy);
                         List<NewWordProxy> addList = getNewWordProxys(1);
@@ -235,7 +235,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }else{
             loseDrillCount++;
             output("错误!正确的单词是'"+newWordProxy.getWord()+"'。");
-            newWordProxy.setDrillCount(newWordProxy.getDrillCount()-1);
+//            newWordProxy.setDrillCount(newWordProxy.getDrillCount()-1);
             newWordProxy.setLoseCount(newWordProxy.getLoseCount()+1);
         }
         return 0;
