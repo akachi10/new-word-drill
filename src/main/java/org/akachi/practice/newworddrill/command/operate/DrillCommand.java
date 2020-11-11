@@ -124,13 +124,20 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     /**
      * 训练所有
      */
-    public void drillAll(){
+    public void drillall(){
         allInit();
         next();
     }
+    /**
+     * 逆练训练所有
+     */
+    public void redrillall(){
+        allInit();
+        renext();
+    }
 
     /**
-     * 训练某一天
+     * 训练错误单词
      * @param day
      */
     public void wrong(String day){
@@ -141,6 +148,19 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         wrongInit(dayInt);
         next();
+    }
+    /**
+     * 逆向训练
+     * @param day
+     */
+    public void rewrong(String day){
+        Integer dayInt=0;
+        try {
+            dayInt = Integer.parseInt(day);
+        }catch (Exception e){
+        }
+        wrongInit(dayInt);
+        renext();
     }
 
     /**
