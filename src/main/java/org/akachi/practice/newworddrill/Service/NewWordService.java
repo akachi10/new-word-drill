@@ -78,6 +78,22 @@ public class NewWordService {
         return newWordMapper.findAllByDay(theDate,endDate,DrillConfig.FLAG);
     }
 
+
+    /**
+     * 查询过去的天数
+     * @param formerlyDay 过去一天
+     * @return
+     */
+    public List<NewWord> findWrongWordByTime(int formerlyDay){
+        formerlyDay=formerlyDay*-1;
+        Date date = new Date();
+        LocalDate theDate = LocalDate.now();
+        //如果是昨天就1、如果今天就是0，这里的 theDate和endDate风别表示今天0点和明天0点
+        theDate = theDate.plusDays(formerlyDay);
+        LocalDate endDate = theDate.plusDays(1);
+        return newWordMapper.findWrongByDay(theDate,endDate,DrillConfig.FLAG);
+    }
+
     /**
      * 查询单词按照中文 获得第一个
      * @param chinese 中文

@@ -49,13 +49,51 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      *吧今天的训练单词加载好
      * -----功能没写完未来加入一个可以输入日期的模式已训练昨日或指定日期的单词
      */
-    public void init(){
+    private void init(){
         wordList.clear();
         newWordService.findAll().forEach(word->{
             NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
             if(newWordProxy.isDrillDay()){
                 wordList.add(newWordProxy);
             }
+        });
+        shuffle();
+    }
+
+    /**
+     *吧今天的训练单词加载好
+     * -----功能没写完未来加入一个可以输入日期的模式已训练昨日或指定日期的单词
+     */
+    private void init(int day){
+        wordList.clear();
+        newWordService.findWordByTime(day).forEach(word->{
+            NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
+            wordList.add(newWordProxy);
+        });
+        shuffle();
+    }
+
+    /**
+     * 训练过去错误的单词
+     * @param day 过去天数
+     */
+    private void wrongInit(int day){
+        wordList.clear();
+        newWordService.findWrongWordByTime(day).forEach(word->{
+            NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
+            wordList.add(newWordProxy);
+        });
+        shuffle();
+    }
+
+    /**
+     * 获取本flag下的所有
+     */
+    private void allInit(){
+        wordList.clear();
+        newWordService.findAll().forEach(word->{
+            NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
+            wordList.add(newWordProxy);
         });
         shuffle();
     }
@@ -80,6 +118,28 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }catch (Exception e){
         }
         init(dayInt);
+        next();
+    }
+
+    /**
+     * 训练所有
+     */
+    public void drillAll(){
+        allInit();
+        next();
+    }
+
+    /**
+     * 训练某一天
+     * @param day
+     */
+    public void wrong(String day){
+        Integer dayInt=0;
+        try {
+            dayInt = Integer.parseInt(day);
+        }catch (Exception e){
+        }
+        wrongInit(dayInt);
         next();
     }
 
@@ -126,20 +186,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
 
         init(dayInt);
         crawltest(dayInt);
-    }
-
-
-    /**
-     *吧今天的训练单词加载好
-     * -----功能没写完未来加入一个可以输入日期的模式已训练昨日或指定日期的单词
-     */
-    private void init(int day){
-        wordList.clear();
-        newWordService.findWordByTime(day).forEach(word->{
-            NewWordProxy newWordProxy= NewWordProxy.getInstance(word);
-            wordList.add(newWordProxy);
-        });
-        shuffle();
     }
 
     /**
@@ -224,7 +270,8 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         if(wordTest==null){
             wordTest="";
         }
-        if(DrillConstant.TEST_END.equals(wordTest)||DrillConstant.END_TEST.equals(wordTest)){
+        if(DrillConstant.TEST_END.equals(wordTest)){
+            output("训练结束!");
             return -2;
         }else if(DrillConstant.TEST_CONTINUE.equals(wordTest)){
             return -3;
@@ -281,7 +328,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         output("请输入'"+newWordProxy.getChinese()+"'的单词");
         String wordTest=input();
-        if(DrillConstant.TEST_END.equals(wordTest)||DrillConstant.END_TEST.equals(wordTest)){
+        if(DrillConstant.TEST_END.equals(wordTest)){
             testReport();
             return;
         }
@@ -346,7 +393,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         output("请输入'"+newWordProxy.getWord()+"'的翻译");
         String wordTest=input();
-        if(DrillConstant.TEST_END.equals(wordTest)||DrillConstant.END_TEST.equals(wordTest)){
+        if(DrillConstant.TEST_END.equals(wordTest)){
             testReport();
             return;
         }

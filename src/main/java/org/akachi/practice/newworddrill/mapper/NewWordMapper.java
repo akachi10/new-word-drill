@@ -14,13 +14,12 @@ public interface NewWordMapper {
             "phonetic_symbol, " +
             "chinese, " +
             "memory_time, " +
-            "last_lethe_time, " +
             "lethe_count," +
             "last_memory_time," +
             "create_time," +
             "success_count," +
             "flag" +
-            ")  VALUES(#{word},#{phoneticSymbol},#{chinese}, NOW(),NOW(),0,NOW(),NOW(),0,#{flag})")
+            ")  VALUES(#{word},#{phoneticSymbol},#{chinese},NOW(),0,NOW(),NOW(),0,#{flag})")
     public int insert(NewWord newWord);
 
     @Update("update new_word set " +
@@ -60,11 +59,12 @@ public interface NewWordMapper {
     @Select("select * from new_word where flag=#{flag}")
     public List<NewWord> findAll(String flag);
 
-
     @Select("select * from new_word where memory_time>#{beginDate} and memory_time<#{endDate} and flag=#{flag}")
     public List<NewWord> findAllByDay(LocalDate beginDate, LocalDate endDate,String flag);
 
+    @Select("select * from new_word where last_lethe_time>#{beginDate} and last_lethe_time<#{endDate} and flag=#{flag}")
+    public List<NewWord> findWrongByDay(LocalDate beginDate, LocalDate endDate,String flag);
+
     @Delete("delete from new_word where word=#{word} and flag=#{flag}")
     public int deleteWord(String word,String flag);
-
 }

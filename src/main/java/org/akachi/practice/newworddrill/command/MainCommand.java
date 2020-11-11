@@ -46,10 +46,13 @@ public class MainCommand extends AbstractCommand implements ICommand {
             if (command==null||"".equals(command)){
                 continue;
             }else if(command.split(" ").length==2&&
-                    "flag".equals(command.split(" ")[0])&&
-                    !"".equals(command.split(" ")[1])) {
+                    DrillConstant.FLAG.equals(command.split(" ")[0])&&
+                    !DrillConstant.TEST_CONTINUE.equals(command.split(" ")[1])) {
                 DrillConfig.FLAG = command.split(" ")[1];
                 output("已经设置flag为'" + command.split(" ")[1] + "'");
+            }else if(DrillConstant.FLAG.equals(command)){
+                output("已经设置flag为'" + DrillConfig.FLAG+ "'");
+                this.setFlag(DrillConfig.FLAG);
             }else if(DrillConstant.END.equals(command)||DrillConstant.EXIT.equals(command)){
                 break;
             }else if(DrillConstant.HELP.equals(command)){

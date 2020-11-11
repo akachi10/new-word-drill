@@ -89,7 +89,7 @@ public class ExamCommand extends AbstractCommand {
             }
         output("请输入'"+newWordProxy.getChinese()+"'的单词");
         String wordTest=input();
-        if(DrillConstant.END_TEST.equals(wordTest)||DrillConstant.TEST_END.equals(wordTest)){
+        if(DrillConstant.TEST_END.equals(wordTest)){
             /*打印测试报告*/
             testReport();
             output("已终止测验并重置测验列表");
