@@ -221,6 +221,9 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     private int crawlWord(NewWordProxy newWordProxy){
         output("请输入'"+newWordProxy.getChinese()+"'的单词");
         String wordTest=input();
+        if(wordTest==null){
+            wordTest="";
+        }
         if(DrillConstant.TEST_END.equals(wordTest)||DrillConstant.END_TEST.equals(wordTest)){
             return -2;
         }else if(DrillConstant.TEST_CONTINUE.equals(wordTest)){
