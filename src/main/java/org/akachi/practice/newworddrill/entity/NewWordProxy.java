@@ -89,11 +89,11 @@ public class NewWordProxy extends NewWord{
                 /*如果已经超过加权后的时间那么今天是训练日*/
                 || theDate.getTime() > calendar.getTime().getTime()
                 /*如果在今天测试失败了那么今天也是练习日 */
-                || DateUtils.isSameDay(theDate, lastLetheTime)
+                || lastLetheTime!=null&&DateUtils.isSameDay(theDate, lastLetheTime)
                 /*如果今天录入的单词今天也是训练日*/
-                || DateUtils.isSameDay(theDate, lastMemoryTime)
+                || lastMemoryTime!=null&&DateUtils.isSameDay(theDate, lastMemoryTime)
                 /*如果在今天测成功那今天也是练习日*/
-                || DateUtils.isSameDay(theDate, memoryTime);
+                || memoryTime!=null&&DateUtils.isSameDay(theDate, memoryTime);
     }
 
     /**
