@@ -18,9 +18,9 @@ import java.util.GregorianCalendar;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class NewWordProxy extends NewWord{
+public class NewWordProxy extends NewWord {
 
-    private NewWordProxy(){
+    private NewWordProxy() {
     }
 
     /**
@@ -35,10 +35,11 @@ public class NewWordProxy extends NewWord{
 
     /**
      * 构造单词代理器
+     *
      * @param newWord 单词
      * @return 单词代理
      */
-    public static NewWordProxy getInstance(NewWord newWord){
+    public static NewWordProxy getInstance(NewWord newWord) {
         NewWordProxy newWordProxy = new NewWordProxy();
         newWordProxy.setWord(newWord.getWord());
         newWordProxy.setPhoneticSymbol(newWord.getPhoneticSymbol());
@@ -55,52 +56,55 @@ public class NewWordProxy extends NewWord{
 
     /**
      * 单日是否是测验日
+     *
      * @return 是否是测验日
      */
-    public boolean isRecordTestDay(){
+    public boolean isRecordTestDay() {
         Date theDate = new Date(System.currentTimeMillis());
         /*今天尚未测试过或录入单词，并且今天是训练日，那么今天也是测试日。*/
+        /*如果今天已经测试成功了那今天就不是测试日了*/
         return isDrillDay()
-                /*如果今天已经测试成功了那今天就不是测试日了*/
-                && !DateUtils.isSameDay(theDate, lastMemoryTime)
                 /*如果今天是记忆日那么今天也不是测试日*/
-                && !DateUtils.isSameDay(theDate, lastLetheTime)
+                && !DateUtils.isSameDay(theDate, lastMemoryTime)
                 /*如果今天已经测试失败了那今天就不是测试日了*/
+                && (lastLetheTime==null||!DateUtils.isSameDay(theDate, lastLetheTime))
+                /*如果今天是练习日并且没有测试过啧今天是测试日*/
                 && !DateUtils.isSameDay(theDate, memoryTime);
-        /*如果今天是练习日并且没有测试过啧今天是测试日*/
     }
 
     /**
      * 当日是否是练习日
+     *
      * @return 是否是练习日
      */
-    public boolean isDrillDay(){
+    public boolean isDrillDay() {
         int nextTestDay = getNextTestDay();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(memoryTime);
         /*增加到相应的天数*/
-        calendar.add(Calendar.DATE,nextTestDay);
+        calendar.add(Calendar.DATE, nextTestDay);
         Date theDate = new Date(System.currentTimeMillis());
         /*如果今天与甲醛后的日期是同一天那么今天是练习日*/
         /*是测练习日*/
         return
                 /*如果加权后的时间与今天是同一天那么今天是训练日*/
                 DateUtils.isSameDay(calendar.getTime(), theDate)
-                /*如果已经超过加权后的时间那么今天是训练日*/
-                || theDate.getTime() > calendar.getTime().getTime()
-                /*如果在今天测试失败了那么今天也是练习日 */
-                || lastLetheTime!=null&&DateUtils.isSameDay(theDate, lastLetheTime)
-                /*如果今天录入的单词今天也是训练日*/
-                || lastMemoryTime!=null&&DateUtils.isSameDay(theDate, lastMemoryTime)
-                /*如果在今天测成功那今天也是练习日*/
-                || memoryTime!=null&&DateUtils.isSameDay(theDate, memoryTime);
+                        /*如果已经超过加权后的时间那么今天是训练日*/
+                        || theDate.getTime() > calendar.getTime().getTime()
+                        /*如果在今天测试失败了那么今天也是练习日 */
+                        || lastLetheTime != null && DateUtils.isSameDay(theDate, lastLetheTime)
+                        /*如果今天录入的单词今天也是训练日*/
+                        || lastMemoryTime != null && DateUtils.isSameDay(theDate, lastMemoryTime)
+                        /*如果在今天测成功那今天也是练习日*/
+                        || memoryTime != null && DateUtils.isSameDay(theDate, memoryTime);
     }
 
     /**
      * 获得下一次测试时间
+     *
      * @return 多少天之后
      */
-    private int getNextTestDay(){
+    private int getNextTestDay() {
         int testCount = Math.max(successCount - letheCount, 1);
         return new Double(Math.pow(testCount, DrillConfig.MAGNITUDE)).intValue();
     }
