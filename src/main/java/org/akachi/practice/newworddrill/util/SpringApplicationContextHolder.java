@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringApplicationContextHolder implements ApplicationContextAware {
     private static ApplicationContext context;
-  
-    @Override  
+
+    @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
-        this.context = context;  
+        this.context = context;
     }
-    
+
     /**
      * 获取context
      *
@@ -24,22 +24,22 @@ public class SpringApplicationContextHolder implements ApplicationContextAware {
     }
 
 
-  
-     /**
-      * 获得springBean
-      * @param beanName
-      * @return
-      */
-    public static Object getSpringBean(String beanName) {  
+    /**
+     * 获得springBean
+     *
+     * @param beanName
+     * @return
+     */
+    public static Object getSpringBean(String beanName) {
 //        notEmpty(beanName, "bean name is required");  
-        if(beanName!=null&&!"".equals(beanName)){
-        	return context==null?null:context.getBean(beanName); 
-        }else{
-        	System.out.println("bean name is required");
-        	return null;
+        if (beanName != null && !"".equals(beanName)) {
+            return context == null ? null : context.getBean(beanName);
+        } else {
+            System.out.println("bean name is required");
+            return null;
         }
-    } 
-    
+    }
+
     /**
      * 通过class获取Bean.
      */
@@ -48,9 +48,8 @@ public class SpringApplicationContextHolder implements ApplicationContextAware {
     }
 
 
-
-	public static String[] getBeanDefinitionNames() {  
-        return context.getBeanDefinitionNames();  
-    }  
+    public static String[] getBeanDefinitionNames() {
+        return context.getBeanDefinitionNames();
+    }
 
 }

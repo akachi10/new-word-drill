@@ -13,12 +13,12 @@ public class TestCommand extends AbstractCommand {
 
     @Override
     public String introduce() {
-        return "测试命令="+DrillConfig.FLAG;
+        return "测试命令=" + DrillConfig.FLAG;
     }
 
-    public void testConfig(){
-        System.out.println("LOSE_MAX_COUNT:"+ DrillConfig.LOSE_MAX_COUNT+
-                ";LOSE_MIN_COUNT:"+DrillConfig.LOSE_MIN_COUNT+
-                ";MAGINTUDE:"+DrillConfig.MAGNITUDE);
+    public void testConfig() {
+        System.out.println("LOSE_MAX_COUNT:" + DrillConfig.LOSE_MAX_COUNT +
+                ";LOSE_MIN_COUNT:" + DrillConfig.LOSE_MIN_COUNT +
+                ";MAGINTUDE:" + DrillConfig.MAGNITUDE);
     }
 }

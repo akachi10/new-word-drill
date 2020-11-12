@@ -11,32 +11,32 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 /**
  * 类相关的工具类
  *
  * @author <a href="mailto:ohergal@gmail.com">ohergal</a>
- *
  */
 public class ClassUtil {
 
     /**
      * 取得某个接口下所有实现这个接口的类
-     * */
+     */
     public static List<Class> getAllClassByInterface(Class c) {
-        List<Class>  returnClassList = null;
+        List<Class> returnClassList = null;
 
-        if(c.isInterface()) {
+        if (c.isInterface()) {
             // 获取当前的包名
             String packageName = c.getPackage().getName();
             // 获取当前包下以及子包下所以的类
             List<Class<?>> allClass = getClasses(packageName);
-            if(allClass != null) {
+            if (allClass != null) {
                 returnClassList = new ArrayList<Class>();
-                for(Class classes : allClass) {
+                for (Class classes : allClass) {
                     // 判断是否是同一个接口
-                    if(c.isAssignableFrom(classes)) {
+                    if (c.isAssignableFrom(classes)) {
                         // 本身不加入进去
-                        if(!c.equals(classes)) {
+                        if (!c.equals(classes)) {
                             returnClassList.add(classes);
                         }
                     }
@@ -47,9 +47,9 @@ public class ClassUtil {
         return returnClassList;
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         List<Class> classes = ClassUtil.getAllClassByInterface(Class.forName("com.threeti.dao.base.IGenericDao"));
-        for (Class clas :classes) {
+        for (Class clas : classes) {
             System.out.println(clas.getName());
         }
     }
@@ -57,16 +57,16 @@ public class ClassUtil {
     /*
      * 取得某一类所在包的所有类名 不含迭代
      */
-    public static String[] getPackageAllClassName(String classLocation, String packageName){
+    public static String[] getPackageAllClassName(String classLocation, String packageName) {
         //将packageName分解
         String[] packagePathSplit = packageName.split("[.]");
         String realClassLocation = classLocation;
         int packageLength = packagePathSplit.length;
-        for(int i = 0; i< packageLength; i++){
-            realClassLocation = realClassLocation + File.separator+packagePathSplit[i];
+        for (int i = 0; i < packageLength; i++) {
+            realClassLocation = realClassLocation + File.separator + packagePathSplit[i];
         }
         File packeageDir = new File(realClassLocation);
-        if(packeageDir.isDirectory()){
+        if (packeageDir.isDirectory()) {
             String[] allClassName = packeageDir.list();
             return allClassName;
         }
@@ -75,10 +75,11 @@ public class ClassUtil {
 
     /**
      * 从包package中获取所有的Class
+     *
      * @param packageName
      * @return
      */
-    public static List<Class<?>> getClasses(String packageName){
+    public static List<Class<?>> getClasses(String packageName) {
 
         //第一个class类的集合
         List<Class<?>> classes = new ArrayList<Class<?>>();
@@ -91,7 +92,7 @@ public class ClassUtil {
         try {
             dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
             //循环迭代下去
-            while (dirs.hasMoreElements()){
+            while (dirs.hasMoreElements()) {
                 //获取下一个元素
                 URL url = dirs.nextElement();
                 //得到协议的名称
@@ -102,7 +103,7 @@ public class ClassUtil {
                     String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
                     //以文件的方式扫描整个包下的文件 并添加到集合中
                     findAndAddClassesInPackageByFile(packageName, filePath, recursive, classes);
-                } else if ("jar".equals(protocol)){
+                } else if ("jar".equals(protocol)) {
                     //如果是jar包文件
                     //定义一个JarFile
                     JarFile jar;
@@ -130,7 +131,7 @@ public class ClassUtil {
                                     packageName = name.substring(0, idx).replace('/', '.');
                                 }
                                 //如果可以迭代下去 并且是一个包
-                                if ((idx != -1) || recursive){
+                                if ((idx != -1) || recursive) {
                                     //如果是一个.class文件 而且不是目录
                                     if (name.endsWith(".class") && !entry.isDirectory()) {
                                         //去掉后面的".class" 获取真正的类名
@@ -159,12 +160,13 @@ public class ClassUtil {
 
     /**
      * 以文件的形式来获取包下的所有Class
+     *
      * @param packageName
      * @param packagePath
      * @param recursive
      * @param classes
      */
-    public static void findAndAddClassesInPackageByFile(String packageName, String packagePath, final boolean recursive, List<Class<?>> classes){
+    public static void findAndAddClassesInPackageByFile(String packageName, String packagePath, final boolean recursive, List<Class<?>> classes) {
         //获取此包的目录 建立一个File
         File dir = new File(packagePath);
         //如果不存在或者 也不是目录就直接返回
@@ -187,8 +189,7 @@ public class ClassUtil {
                         file.getAbsolutePath(),
                         recursive,
                         classes);
-            }
-            else {
+            } else {
                 //如果是java类文件 去掉后面的.class 只留下类名
                 String className = file.getName().substring(0, file.getName().length() - 6);
                 try {

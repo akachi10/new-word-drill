@@ -67,7 +67,7 @@ public class NewWordProxy extends NewWord {
                 /*如果今天是记忆日那么今天也不是测试日*/
                 && !DateUtils.isSameDay(theDate, lastMemoryTime)
                 /*如果今天已经测试失败了那今天就不是测试日了*/
-                && (lastLetheTime==null||!DateUtils.isSameDay(theDate, lastLetheTime))
+                && (lastLetheTime == null || !DateUtils.isSameDay(theDate, lastLetheTime))
                 /*如果今天是练习日并且没有测试过啧今天是测试日*/
                 && !DateUtils.isSameDay(theDate, memoryTime);
     }

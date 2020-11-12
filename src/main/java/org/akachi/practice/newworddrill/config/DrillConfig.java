@@ -13,7 +13,6 @@ public class DrillConfig {
     public static Float MAGNITUDE;
     public static Integer LOSE_MIN_COUNT;
     public static Integer LOSE_MAX_COUNT;
-//    public static Integer TOTAL_DRILL_COUNT;
     public static String DRILL_DEFAULT_COMMAND;
     public static String DRILL_DEFAULT_FUNCTION;
     public static Integer DRILL_CRAWL_LENGTH;
@@ -52,17 +51,17 @@ public class DrillConfig {
     }
 
     @Value("${drill.crawlLength}")
-    public void setDrillCrawlLength(Integer DRILL_CRAWL_LENGTH){
+    public void setDrillCrawlLength(Integer DRILL_CRAWL_LENGTH) {
         this.DRILL_CRAWL_LENGTH = DRILL_CRAWL_LENGTH;
     }
 
     @Value("${drill.crawlRepeat}")
-    public void setDrillCrawlRepeat(Integer DRILL_CRAWL_REPEAT){
+    public void setDrillCrawlRepeat(Integer DRILL_CRAWL_REPEAT) {
         this.DRILL_CRAWL_REPEAT = DRILL_CRAWL_REPEAT;
     }
 
     @Value("${drill.default.flag}")
-    public void setFLAG(String flag){
-        this.FLAG= flag;
+    public void setFLAG(String flag) {
+        this.FLAG = flag;
     }
 }

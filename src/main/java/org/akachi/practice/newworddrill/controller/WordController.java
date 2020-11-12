@@ -15,9 +15,10 @@ public class WordController {
     @Autowired
     NewWordService newWordService;
 
-    private static Map<String,String> commandMap = new HashMap<>();
+    private static Map<String, String> commandMap = new HashMap<>();
+
     static {
-        commandMap.put("hellp","hellp");
+        commandMap.put("hellp", "hellp");
     }
 
 }

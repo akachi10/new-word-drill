@@ -1,10 +1,11 @@
 package org.akachi.practice.newworddrill.util;
 
-import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 
 /**
  * @author LvLvFeng
@@ -27,7 +28,7 @@ public class JSONChangeUtil {
      * @param:传入对象
      * @return:json字符串
      */
-    public static String objToJson(Object obj)  {
+    public static String objToJson(Object obj) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(obj);

@@ -4,7 +4,6 @@ import org.akachi.practice.newworddrill.entity.NewWord;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Mapper

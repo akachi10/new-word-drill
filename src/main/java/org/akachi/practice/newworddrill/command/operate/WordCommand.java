@@ -6,12 +6,8 @@ import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWord;
-import org.akachi.practice.newworddrill.entity.NewWordProxy;
 import org.akachi.practice.newworddrill.util.JSONChangeUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author akachi
