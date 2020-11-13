@@ -17,6 +17,7 @@ public class DrillConfig {
     public static String DRILL_DEFAULT_FUNCTION;
     public static Integer DRILL_CRAWL_LENGTH;
     public static Integer DRILL_CRAWL_REPEAT;
+    public static Integer DRILL_CRAWL_TIME;
     public static String FLAG;
 
 
@@ -63,5 +64,10 @@ public class DrillConfig {
     @Value("${drill.default.flag}")
     public void setFLAG(String flag) {
         this.FLAG = flag;
+    }
+
+    @Value("${drill.crawlTime}")
+    public void setFLAG(Integer drillCrawlTime) {
+        this.DRILL_CRAWL_TIME=drillCrawlTime;
     }
 }

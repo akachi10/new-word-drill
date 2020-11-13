@@ -9,6 +9,8 @@ import org.akachi.practice.newworddrill.entity.NewWordProxy;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 import org.akachi.practice.newworddrill.util.StringUtil;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -256,22 +258,30 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         while (true) {
             if (newWordProxy != null) {
                 //测试单词
+                LocalDateTime ldb = LocalDateTime.now();
                 int testFruit = crawlWord(newWordProxy);
+                LocalDateTime lde = LocalDateTime.now();
+                Duration duration = Duration.between(ldb, lde);
+                int cost = new Long(duration.getSeconds()).intValue();
                 if (testFruit == 0) {
                     //小于最大重复训练次数
-                    if (newWordProxy.getDrillCount() == DrillConfig.DRILL_CRAWL_REPEAT) {
+                    if (cost<DrillConfig.DRILL_CRAWL_TIME&&newWordProxy.getDrillCount() == DrillConfig.DRILL_CRAWL_REPEAT) {
                         //如果对了就继续
                         //否则remove这个单词
+                        output("'" + newWordProxy.getWord() + "'训练成功训练了" + (newWordProxy.getLoseCount() + DrillConfig.DRILL_CRAWL_REPEAT) + "次.");
+                        output("失败了" + newWordProxy.getLoseCount() + "次.训练通过.");
                         newWordProxyList.remove(newWordProxy);
                         List<NewWordProxy> addList = getNewWordProxys(1);
                         newWordProxyList.addAll(addList);
+                    }else if(cost>=DrillConfig.DRILL_CRAWL_TIME){
+                        output("耗时"+cost+"秒 ，训练超时。");
                     }
 
                     if (newWordProxyList.size() > 0) {
                         Collections.shuffle(newWordProxyList);
                         newWordProxy = newWordProxyList.get(0);
                     }
-                }else if (testFruit == -1){
+                } else if (testFruit == -1) {
                     //错误重复测试
                 } else if (testFruit == -2) {
                     crawlReport();
@@ -323,7 +333,9 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         } else {
             loseDrillCount++;
             output("错误!正确的单词是'" + newWordProxy.getWord() + "'。");
-//            newWordProxy.setDrillCount(newWordProxy.getDrillCount()-1);
+            if (newWordProxy.getDrillCount() > 0) {
+                newWordProxy.setDrillCount(newWordProxy.getDrillCount() - 1);
+            }
             newWordProxy.setLoseCount(newWordProxy.getLoseCount() + 1);
             return -1;
         }
