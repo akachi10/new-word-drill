@@ -6,6 +6,7 @@ public class DrillConstant {
     public static final String END = "end";
     public static final String EXIT = "exit";
     public static final String FLAG = "flag";
+    public static final String FINDFLAG = "findflag";
 
     public static final String HELP = "help";
     public static final String START = "start";

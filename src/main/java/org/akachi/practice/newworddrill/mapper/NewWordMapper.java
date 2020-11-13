@@ -66,4 +66,8 @@ public interface NewWordMapper {
 
     @Delete("delete from new_word where word=#{word} and flag=#{flag}")
     public int deleteWord(String word,String flag);
+
+    @Select("select flag from new_word group by flag")
+    public List<String> flagList();
+
 }

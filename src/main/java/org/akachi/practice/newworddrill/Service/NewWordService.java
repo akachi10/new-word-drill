@@ -82,6 +82,9 @@ public class NewWordService {
         return newWordMapper.findAllByDay(theDate, endDate, DrillConfig.FLAG);
     }
 
+    public List<String> flagList(){
+        return this.newWordMapper.flagList();
+    }
 
     /**
      * 查询过去的天数

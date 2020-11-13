@@ -1,14 +1,17 @@
 package org.akachi.practice.newworddrill.command;
 
+import org.akachi.practice.newworddrill.Service.NewWordService;
 import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.util.ClassUtil;
+import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 
 /**
  * @author akachi
  */
 public class MainCommand extends AbstractCommand implements ICommand {
 
+    private NewWordService newWordService  = (NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
 
     @Override
     public void start() {
@@ -26,7 +29,7 @@ public class MainCommand extends AbstractCommand implements ICommand {
     public void help() {
         output(AbstractCommand.ANNOTATION + this.introduce() + AbstractCommand.ANNOTATION);
         StringBuffer sb = new StringBuffer();
-        sb.append("可以执行以下命令[" + DrillConstant.END + "," + DrillConstant.HELP + "," + DrillConstant.FLAG);
+        sb.append("可以执行以下命令[" + DrillConstant.END + "," + DrillConstant.HELP + "," + DrillConstant.FLAG+","+DrillConstant.FINDFLAG);
         ClassUtil.getAllClassByInterface(ICommand.class).forEach(clazz -> {
             if (!clazz.equals(AbstractCommand.class) && !clazz.equals(MainCommand.class)) {
                 sb.append(",").append(clazz.getSimpleName().toLowerCase().replace("command", ""));
@@ -35,6 +38,8 @@ public class MainCommand extends AbstractCommand implements ICommand {
         sb.append("]");
         output(sb.toString());
     }
+
+
 
     @Override
     public String introduce() {
@@ -47,7 +52,13 @@ public class MainCommand extends AbstractCommand implements ICommand {
             String command = input();
             if (command == null || "".equals(command)) {
                 continue;
-            } else if (command.split(" ").length == 2 &&
+            } else if (DrillConstant.FINDFLAG.equals(command)){
+                StringBuffer stringBuffer = new StringBuffer();
+                this.newWordService.findAll().forEach( flag->{
+                    stringBuffer.append(flag).append(",");
+                });
+                output("打印flag列表:"+stringBuffer.toString());
+            }else if (command.split(" ").length == 2 &&
                     DrillConstant.FLAG.equals(command.split(" ")[0]) &&
                     !DrillConstant.TEST_CONTINUE.equals(command.split(" ")[1])) {
                 DrillConfig.FLAG = command.split(" ")[1];
