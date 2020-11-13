@@ -247,23 +247,32 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             output("当前没有训练单词!");
             return;
         }
+        //先获得一个单词
+        NewWordProxy newWordProxy = null;
+        if (newWordProxyList.size() > 0) {
+            Collections.shuffle(newWordProxyList);
+            newWordProxy = newWordProxyList.get(0);
+        }
         while (true) {
-            NewWordProxy newWordProxy = null;
-            if (newWordProxyList.size() > 0) {
-                Collections.shuffle(newWordProxyList);
-                newWordProxy = newWordProxyList.get(0);
-            }
             if (newWordProxy != null) {
                 //测试单词
                 int testFruit = crawlWord(newWordProxy);
                 if (testFruit == 0) {
                     //小于最大重复训练次数
                     if (newWordProxy.getDrillCount() == DrillConfig.DRILL_CRAWL_REPEAT) {
+                        //如果对了就继续
                         //否则remove这个单词
                         newWordProxyList.remove(newWordProxy);
                         List<NewWordProxy> addList = getNewWordProxys(1);
                         newWordProxyList.addAll(addList);
                     }
+
+                    if (newWordProxyList.size() > 0) {
+                        Collections.shuffle(newWordProxyList);
+                        newWordProxy = newWordProxyList.get(0);
+                    }
+                }else if (testFruit == -1){
+                    //错误重复测试
                 } else if (testFruit == -2) {
                     crawlReport();
                     output("爬虫训练结束");
@@ -316,6 +325,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             output("错误!正确的单词是'" + newWordProxy.getWord() + "'。");
 //            newWordProxy.setDrillCount(newWordProxy.getDrillCount()-1);
             newWordProxy.setLoseCount(newWordProxy.getLoseCount() + 1);
+            return -1;
         }
         return 0;
     }
