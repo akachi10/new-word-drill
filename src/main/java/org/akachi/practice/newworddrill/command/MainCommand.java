@@ -57,7 +57,8 @@ public class MainCommand extends AbstractCommand implements ICommand {
                 this.newWordService.flagList().forEach( flag->{
                     stringBuffer.append(flag).append(",");
                 });
-                output("打印flag列表:"+stringBuffer.toString());
+                output("打印flag列表");
+                output(stringBuffer.toString());
             }else if (command.split(" ").length == 2 &&
                     DrillConstant.FLAG.equals(command.split(" ")[0]) &&
                     !DrillConstant.TEST_CONTINUE.equals(command.split(" ")[1])) {
