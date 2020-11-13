@@ -29,7 +29,7 @@ public class MainCommand extends AbstractCommand implements ICommand {
     public void help() {
         output(AbstractCommand.ANNOTATION + this.introduce() + AbstractCommand.ANNOTATION);
         StringBuffer sb = new StringBuffer();
-        sb.append("可以执行以下命令[" + DrillConstant.END + "," + DrillConstant.HELP + "," + DrillConstant.FLAG+","+DrillConstant.FINDFLAG);
+        sb.append("可以执行以下命令[" + DrillConstant.END + "," + DrillConstant.HELP + "," + DrillConstant.FLAG+","+DrillConstant.FLAGLIST);
         ClassUtil.getAllClassByInterface(ICommand.class).forEach(clazz -> {
             if (!clazz.equals(AbstractCommand.class) && !clazz.equals(MainCommand.class)) {
                 sb.append(",").append(clazz.getSimpleName().toLowerCase().replace("command", ""));
@@ -52,9 +52,9 @@ public class MainCommand extends AbstractCommand implements ICommand {
             String command = input();
             if (command == null || "".equals(command)) {
                 continue;
-            } else if (DrillConstant.FINDFLAG.equals(command)){
+            } else if (DrillConstant.FLAGLIST.equals(command)){
                 StringBuffer stringBuffer = new StringBuffer();
-                this.newWordService.findAll().forEach( flag->{
+                this.newWordService.flagList().forEach( flag->{
                     stringBuffer.append(flag).append(",");
                 });
                 output("打印flag列表:"+stringBuffer.toString());
