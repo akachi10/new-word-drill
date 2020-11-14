@@ -334,7 +334,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             loseDrillCount++;
             output("错误!正确的单词是'" + newWordProxy.getWord() + "'。");
             if (newWordProxy.getDrillCount() > 0) {
-                newWordProxy.setDrillCount(newWordProxy.getDrillCount() - 1);
+                newWordProxy.setDrillCount(newWordProxy.getDrillCount() - 2);
             }
             newWordProxy.setLoseCount(newWordProxy.getLoseCount() + 1);
             return -1;
