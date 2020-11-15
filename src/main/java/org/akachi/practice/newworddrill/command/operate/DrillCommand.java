@@ -370,16 +370,20 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         test(newWordProxy, seed);
     }
 
+    private void progress(){
+        /*测试输入与输出*/
+        if (examCount % DrillConstant.HINT_RATING == 0) {
+            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+examCount+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
+        }
+    }
+
     /**
      * 测试单词
      *
      * @param newWordProxy
      */
     private void test(NewWordProxy newWordProxy, List<Integer> seed) {
-        /*测试输入与输出*/
-        if (examCount % DrillConstant.HINT_RATING == 0) {
-            output("如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
-        }
+        progress();
         output("请输入'" + newWordProxy.getChinese() + "'的单词");
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
@@ -443,9 +447,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      */
     private void retest(NewWordProxy newWordProxy) {
         /*测试输入与输出*/
-        if (examCount % DrillConstant.HINT_RATING == 0) {
-            output("如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
-        }
+        progress();
         output("请输入'" + newWordProxy.getWord() + "'的翻译");
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
@@ -521,6 +523,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             this.successDrillCount = 0;
         }
         loseWord.clear();
+        this.examCount=0;
     }
 
 
@@ -538,6 +541,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             this.loseDrillCount = 0;
             this.successDrillCount = 0;
         }
+        this.examCount=0;
         //爬虫训练并不关心错误单词
 //        loseWord.clear();
     }
