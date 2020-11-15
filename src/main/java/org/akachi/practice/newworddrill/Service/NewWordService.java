@@ -3,6 +3,7 @@ package org.akachi.practice.newworddrill.Service;
 import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.NewWord;
 import org.akachi.practice.newworddrill.mapper.NewWordMapper;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,29 @@ public class NewWordService {
      * @param word 单词
      */
     public void memoryWord(NewWord word) {
+        //吧凌晨写入的单词算入今天
+        word.setCreateTime(subTime(word.getCreateTime()));
+        word.setLastLetheTime(subTime(word.getLastLetheTime()));
+        word.setLastMemoryTime(subTime(word.getLastMemoryTime()));
+        word.setMemoryTime(subTime(word.getMemoryTime()));
         newWordMapper.insert(word);
+    }
+
+    /**
+     * 让凌晨写入的内容也算入今日
+     * @param date
+     * @return
+     */
+    private Date subTime(Date date) {
+        if (date != null) {
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            if (calendar.get(Calendar.HOUR) > 4) {
+                calendar.add(Calendar.HOUR, -5);
+                date = calendar.getTime();
+            }
+        }
+        return date;
     }
 
     /**
@@ -82,7 +105,7 @@ public class NewWordService {
         return newWordMapper.findAllByDay(theDate, endDate, DrillConfig.FLAG);
     }
 
-    public List<String> flagList(){
+    public List<String> flagList() {
         return this.newWordMapper.flagList();
     }
 
@@ -100,20 +123,6 @@ public class NewWordService {
         theDate = theDate.plusDays(formerlyDay);
         LocalDate endDate = theDate.plusDays(1);
         return newWordMapper.findWrongByDay(theDate, endDate, DrillConfig.FLAG);
-    }
-
-    /**
-     * 查询单词按照中文 获得第一个
-     *
-     * @param chinese 中文
-     * @return 第一个符合的中文单词
-     */
-    public NewWord findWordByChinese(String chinese) {
-        List<NewWord> newWordList = newWordMapper.findWordByChinese(chinese, DrillConfig.FLAG);
-        if (newWordList != null && newWordList.size() > 0) {
-            return newWordList.get(0);
-        }
-        return null;
     }
 
     /**
