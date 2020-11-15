@@ -46,11 +46,13 @@ public class NewWordService {
      */
     public void memoryWord(NewWord word) {
         //吧凌晨写入的单词算入今天
+        newWordMapper.insert(word);
+        word=newWordMapper.findWord(word.getWord(),word.getFlag());
         word.setCreateTime(subTime(word.getCreateTime()));
         word.setLastLetheTime(subTime(word.getLastLetheTime()));
         word.setLastMemoryTime(subTime(word.getLastMemoryTime()));
         word.setMemoryTime(subTime(word.getMemoryTime()));
-        newWordMapper.insert(word);
+        newWordMapper.update(word);
     }
 
     /**
