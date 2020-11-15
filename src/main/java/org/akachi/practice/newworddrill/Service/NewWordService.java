@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+
 @Service("NewWordService")
 public class NewWordService {
 
@@ -64,8 +65,8 @@ public class NewWordService {
         if (date != null) {
             Calendar calendar = new GregorianCalendar();
             calendar.setTime(date);
-            if (calendar.get(Calendar.HOUR) > 4) {
-                calendar.add(Calendar.HOUR, -5);
+            if (calendar.get(Calendar.HOUR) < 5) {
+                calendar.add(Calendar.HOUR, -24);
                 date = calendar.getTime();
             }
         }
