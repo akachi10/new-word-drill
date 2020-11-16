@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 
 @Service("NewWordService")
@@ -65,8 +62,10 @@ public class NewWordService {
         if (date != null) {
             Calendar calendar = new GregorianCalendar();
             calendar.setTime(date);
-            if (calendar.get(Calendar.HOUR) < 5) {
-                calendar.add(Calendar.HOUR, -24);
+//            calendar.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+            calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            if (calendar.get(Calendar.HOUR_OF_DAY) < 5) {
+                calendar.add(Calendar.HOUR_OF_DAY, -24);
                 date = calendar.getTime();
             }
         }

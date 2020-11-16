@@ -87,7 +87,7 @@ public class ExamCommand extends AbstractCommand {
     private void exam(NewWordProxy newWordProxy) {
         /*测验输入与输出*/
         if ((this.examCount) % DrillConstant.HINT_RATING == 0) {
-            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+examCount+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
+            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+(successWord.size()+loseWord.size())+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
         output("请输入'" + newWordProxy.getChinese() + "'的单词");
         String wordTest = input();

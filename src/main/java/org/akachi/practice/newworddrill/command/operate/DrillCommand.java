@@ -373,7 +373,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     private void progress(){
         /*测试输入与输出*/
         if (examCount % DrillConstant.HINT_RATING == 0) {
-            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+examCount+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
+            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+(successDrillCount+loseDrillCount)+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
     }
 
