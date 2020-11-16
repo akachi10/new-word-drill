@@ -21,9 +21,9 @@ public class WordCommand extends AbstractCommand implements ICommand {
 //     */
 //    public void create(){
 //        NewWord newWord = new NewWord();
-//        newWord.setWord(input("清输入单词"));
-//        /*newWord.setPhoneticSymbol(input("清输入音标"));*/
-//        newWord.setChinese(input("清输入中文翻译"));
+//        newWord.setWord(input("请输入单词"));
+//        /*newWord.setPhoneticSymbol(input("请输入音标"));*/
+//        newWord.setChinese(input("请输入中文翻译"));
 //        save(newWord);
 //    }
 
@@ -148,9 +148,9 @@ public class WordCommand extends AbstractCommand implements ICommand {
         if (newWord == null) {
             output("单词'" + word + "'不存在");
         } else {
-            newWord.setWord(input("清输入单词", newWord.getWord()));
-            newWord.setPhoneticSymbol(input("清输入音标", newWord.getPhoneticSymbol()));
-            newWord.setChinese(input("清输入中文翻译", newWord.getChinese()));
+            newWord.setWord(input("请输入单词", newWord.getWord()));
+            newWord.setPhoneticSymbol(input("请输入音标", newWord.getPhoneticSymbol()));
+            newWord.setChinese(input("请输入中文翻译", newWord.getChinese()));
             newWordService.alter(newWord, word);
             show(newWord);
         }
@@ -160,21 +160,21 @@ public class WordCommand extends AbstractCommand implements ICommand {
 //     * 修改单词
 //     */
 //    public void alterWord(){
-//        newWord.setWord(input("清输入单词"));
+//        newWord.setWord(input("请输入单词"));
 //    }
 //
 //    /**
 //     * 修改音标
 //     */
 //    public void alterPhoneticSymbol(){
-//        newWord.setPhoneticSymbol(input("清输入音标"));
+//        newWord.setPhoneticSymbol(input("请输入音标"));
 //    }
 //
 //    /**
 //     * 修改中文
 //     */
 //    public void alterChinese(){
-//        newWord.setChinese(input("清输入中文翻译"));
+//        newWord.setChinese(input("请输入中文翻译"));
 //    }
 
     @Override
