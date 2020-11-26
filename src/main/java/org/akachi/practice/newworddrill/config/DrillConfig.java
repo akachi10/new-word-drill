@@ -19,7 +19,10 @@ public class DrillConfig {
     public static Integer DRILL_CRAWL_REPEAT;
     public static Integer DRILL_CRAWL_TIME;
     public static String FLAG;
-
+    public static String BROWSER_PATH;
+    public static String BROWSER;
+    public static String SOUND;
+    public static Integer SOUND_WAIT;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -69,5 +72,25 @@ public class DrillConfig {
     @Value("${drill.crawlTime}")
     public void setFLAG(Integer drillCrawlTime) {
         this.DRILL_CRAWL_TIME=drillCrawlTime;
+    }
+
+    @Value("${drill.browser.path}")
+    public void setBROWSER_PATH(String BROWSER_PATH){
+        this.BROWSER_PATH=BROWSER_PATH;
+    }
+
+    @Value("${drill.browser}")
+    public void setBROWSER(String BROWSER){
+        this.BROWSER=BROWSER;
+    }
+
+    @Value("${drill.sound}")
+    public void setSOUND(String SOUND){
+        this.SOUND=SOUND;
+    }
+
+    @Value("${drill.sound.wait}")
+    public void setSOUND_WAIT(Integer SOUND_WAIT){
+        this.SOUND_WAIT =SOUND_WAIT;
     }
 }

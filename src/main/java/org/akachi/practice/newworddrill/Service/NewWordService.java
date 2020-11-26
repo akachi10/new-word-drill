@@ -128,6 +128,24 @@ public class NewWordService {
     }
 
     /**
+     * 查询过去的天数
+     *
+     * @param beginDay 过去一天
+     * @param days 查询天数
+     * @return
+     */
+    public List<NewWord> findWrongWordByTime(int beginDay,int days) {
+        beginDay = beginDay * -1;
+        Date date = new Date();
+        LocalDate theDate = LocalDate.now();
+        //如果是昨天就1、如果今天就是0，这里的 theDate和endDate风别表示今天0点和明天0点
+        theDate = theDate.plusDays(beginDay);
+        LocalDate endDate = theDate.plusDays(days*-1);
+        //这里是向前查的所有end和begin是调换过来的。
+        return newWordMapper.findWrongByDay(endDate, theDate, DrillConfig.FLAG);
+    }
+
+    /**
      * 删除单词
      *
      * @param word 单词

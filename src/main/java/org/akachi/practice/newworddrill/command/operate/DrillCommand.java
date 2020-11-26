@@ -6,6 +6,7 @@ import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWordProxy;
+import org.akachi.practice.newworddrill.util.DosUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 import org.akachi.practice.newworddrill.util.StringUtil;
 
@@ -91,6 +92,21 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     }
 
     /**
+     * 训练过去错误的单词
+     *
+     * @param beginDay 过去天数
+     * @param days     天数
+     */
+    private void wrongInit(int beginDay, int days) {
+        wordList.clear();
+        newWordService.findWrongWordByTime(beginDay, days).forEach(word -> {
+            NewWordProxy newWordProxy = NewWordProxy.getInstance(word);
+            wordList.add(newWordProxy);
+        });
+        shuffle();
+    }
+
+    /**
      * 获取本flag下的所有
      */
     private void allInit() {
@@ -145,7 +161,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     /**
      * 训练错误单词
      *
-     * @param day
+     * @param day 录入日期
      */
     public void wrong(String day) {
         Integer dayInt = 0;
@@ -158,9 +174,30 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     }
 
     /**
+     * 训练错误单词
+     *
+     * @param day  录入日期
+     * @param days 天数
+     */
+    public void wrong(String day, String days) {
+        Integer dayInt = 0;
+        try {
+            dayInt = Integer.parseInt(day);
+        } catch (Exception e) {
+        }
+        Integer daysInt = 0;
+        try {
+            daysInt = Integer.parseInt(days);
+        } catch (Exception e) {
+        }
+        wrongInit(dayInt,daysInt);
+        next();
+    }
+
+    /**
      * 逆向训练
      *
-     * @param day
+     * @param day 录入日期
      */
     public void rewrong(String day) {
         Integer dayInt = 0;
@@ -265,7 +302,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
                 int cost = new Long(duration.getSeconds()).intValue();
                 if (testFruit == 0) {
                     //小于最大重复训练次数
-                    if (cost<DrillConfig.DRILL_CRAWL_TIME&&newWordProxy.getDrillCount() == DrillConfig.DRILL_CRAWL_REPEAT) {
+                    if (cost < DrillConfig.DRILL_CRAWL_TIME && newWordProxy.getDrillCount() == DrillConfig.DRILL_CRAWL_REPEAT) {
                         //如果对了就继续
                         //否则remove这个单词
                         output("'" + newWordProxy.getWord() + "'训练成功训练了" + (newWordProxy.getLoseCount() + DrillConfig.DRILL_CRAWL_REPEAT) + "次.");
@@ -273,8 +310,8 @@ public class DrillCommand extends AbstractCommand implements ICommand {
                         newWordProxyList.remove(newWordProxy);
                         List<NewWordProxy> addList = getNewWordProxys(1);
                         newWordProxyList.addAll(addList);
-                    }else if(cost>=DrillConfig.DRILL_CRAWL_TIME){
-                        output("耗时"+cost+"秒 ，训练超时。");
+                    } else if (cost >= DrillConfig.DRILL_CRAWL_TIME) {
+                        output("耗时" + cost + "秒 ，训练超时。");
                     }
 
                     if (newWordProxyList.size() > 0) {
@@ -329,6 +366,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             /*测试成功则单词测试次数+1并且清零失败次数*/
             successDrillCount++;
             output("正确!");
+            DosUtil.sound(newWordProxy.getWord());
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
         } else {
             loseDrillCount++;
@@ -370,10 +408,10 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         test(newWordProxy, seed);
     }
 
-    private void progress(){
+    private void progress() {
         /*测试输入与输出*/
         if (examCount % DrillConstant.HINT_RATING == 0) {
-            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+(successDrillCount+loseDrillCount)+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
+            output("本次测试一共有" + wordList.size() + "个单词,已经完成" + (successDrillCount + loseDrillCount) + "个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
     }
 
@@ -395,6 +433,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             /*测试成功则单词测试次数+1并且清零失败次数*/
             output("正确!");
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
+            DosUtil.sound(newWordProxy.getWord());
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
             if (newWordProxy.getLoseCount() >= DrillConfig.LOSE_MIN_COUNT) {
                 this.loseDrillCount++;
@@ -449,6 +488,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         /*测试输入与输出*/
         progress();
         output("请输入'" + newWordProxy.getWord() + "'的翻译");
+        DosUtil.sound(newWordProxy.getWord());
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
             testReport();
@@ -523,7 +563,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             this.successDrillCount = 0;
         }
         loseWord.clear();
-        this.examCount=0;
+        this.examCount = 0;
     }
 
 
@@ -541,7 +581,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             this.loseDrillCount = 0;
             this.successDrillCount = 0;
         }
-        this.examCount=0;
+        this.examCount = 0;
         //爬虫训练并不关心错误单词
 //        loseWord.clear();
     }
