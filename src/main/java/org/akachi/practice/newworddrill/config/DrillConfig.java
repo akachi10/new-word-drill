@@ -23,6 +23,7 @@ public class DrillConfig {
     public static String BROWSER;
     public static String SOUND;
     public static Integer SOUND_WAIT;
+    public static Integer INITIAL_SOUND_WAIT;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -92,5 +93,10 @@ public class DrillConfig {
     @Value("${drill.sound.wait}")
     public void setSOUND_WAIT(Integer SOUND_WAIT){
         this.SOUND_WAIT =SOUND_WAIT;
+    }
+
+    @Value("${drill.initial.sound.wait}")
+    public void setINITIAL_SOUND_WAIT(Integer INITIAL_SOUND_WAIT){
+        this.INITIAL_SOUND_WAIT=INITIAL_SOUND_WAIT;
     }
 }
