@@ -27,7 +27,7 @@ public class DosUtil extends Thread {
         word=word.replace(DrillConstant.SPACE,"%20");
         try {
             Runtime.getRuntime().exec(DrillConfig.BROWSER_PATH + DrillConstant.SPACE + DrillConfig.SOUND + word);
-            Thread.sleep(new Double((2+word.length()/10d)*DrillConfig.SOUND_WAIT).intValue());
+            Thread.sleep(new Double((DrillConfig.INITIAL_SOUND_WAIT+word.length()/10d)*DrillConfig.SOUND_WAIT).intValue());
             Runtime.getRuntime().exec("taskkill /IM " + DrillConfig.BROWSER);
         } catch (Exception e) {
             e.printStackTrace();
