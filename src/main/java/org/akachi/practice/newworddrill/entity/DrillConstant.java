@@ -15,5 +15,6 @@ public class DrillConstant {
     public static final String SPACE = " ";
     public static final String YES = "y";
     public static final Integer HINT_RATING = 10;
+    public static final String  PLACEHOLDER = "[p]";
 
 }

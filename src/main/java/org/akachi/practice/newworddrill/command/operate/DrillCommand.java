@@ -5,6 +5,7 @@ import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.entity.NewWord;
 import org.akachi.practice.newworddrill.entity.NewWordProxy;
 import org.akachi.practice.newworddrill.util.DosUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
@@ -232,6 +233,37 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         renext();
     }
 
+    /**
+     * 带声训练、接口录入翻译、
+     * @param day
+     */
+    public void audio(String day){
+        while (true){
+            getNext();
+            progress();
+        }
+    }
+
+    /**
+     * 获得下一个单词
+     * @return
+     */
+    private NewWordProxy getNext(){
+        if (wordIterator.hasNext()) {
+            NewWordProxy newWordProxy = wordIterator.next();
+            return newWordProxy;
+        } else {
+            output("全部训练完成现在重置列表");
+            testReport();
+            if (wordList == null || wordList.size() == 0) {
+                output("目前没有需要训练的单词");
+            }
+            shuffle();
+            wordIterator = wordList.iterator();
+            return wordIterator.next();
+        }
+    }
+
 
     /**
      * 爬行训练所有单词
@@ -250,7 +282,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             dayInt = Integer.parseInt(day);
         } catch (Exception e) {
         }
-
         init(dayInt);
         crawltest(dayInt);
     }
@@ -259,21 +290,11 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 开始测试
      */
     private void next() {
-        if (wordIterator.hasNext()) {
-            NewWordProxy newWordProxy = wordIterator.next();
-            test(newWordProxy);
-        } else {
-            output("全部训练完成现在重置列表");
-            testReport();
-            if (wordList == null || wordList.size() == 0) {
-                output("目前没有需要训练的单词");
-                return;
-            }
-            shuffle();
-            wordIterator = wordList.iterator();
-            NewWordProxy newWordProxy = wordIterator.next();
-            test(newWordProxy);
+        NewWordProxy newWordProxy=getNext();
+        if(newWordProxy==null){
+            return ;
         }
+        test(newWordProxy);
     }
 
     /**
@@ -462,21 +483,11 @@ public class DrillCommand extends AbstractCommand implements ICommand {
      * 开始测试逆练
      */
     private void renext() {
-        if (wordIterator.hasNext()) {
-            NewWordProxy newWordProxy = wordIterator.next();
-            retest(newWordProxy);
-        } else {
-            output("全部训练完成现在重置列表");
-            testReport();
-            if (wordList == null || wordList.size() == 0) {
-                output("目前没有需要训练的单词");
-                return;
-            }
-            shuffle();
-            wordIterator = wordList.iterator();
-            NewWordProxy newWordProxy = wordIterator.next();
-            retest(newWordProxy);
+        NewWordProxy newWordProxy=getNext();
+        if(newWordProxy==null){
+            return;
         }
+        retest(newWordProxy);
     }
 
     /**
@@ -488,7 +499,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         /*测试输入与输出*/
         progress();
         output("请输入'" + newWordProxy.getWord() + "'的翻译");
-        DosUtil.sound(newWordProxy.getWord());
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
             testReport();
@@ -498,6 +508,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         output("正确翻译是'" + newWordProxy.getChinese() + "'，您们的翻译是" + wordTest + "");
         String flag = null;
         if (!newWordProxy.getChinese().equals(wordTest)) {
+            DosUtil.sound(newWordProxy.getWord());
             flag = input("如果输入正确请直接回车");
         }
         this.examCount++;

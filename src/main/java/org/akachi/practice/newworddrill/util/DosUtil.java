@@ -25,8 +25,11 @@ public class DosUtil extends Thread {
     @Override
     public void run() {
         word=word.replace(DrillConstant.SPACE,"%20");
+        String str = DrillConfig.SOUND;
+        Double i = Math.random()*5;
+        str = str.replace(DrillConstant.PLACEHOLDER,""+(i.intValue()+1));
         try {
-            Runtime.getRuntime().exec(DrillConfig.BROWSER_PATH + DrillConstant.SPACE + DrillConfig.SOUND + word);
+            Runtime.getRuntime().exec(DrillConfig.BROWSER_PATH +DrillConstant.SPACE+ str + word);
             Thread.sleep(new Double((DrillConfig.INITIAL_SOUND_WAIT+word.length()/10d)*DrillConfig.SOUND_WAIT).intValue());
             Runtime.getRuntime().exec("taskkill /IM " + DrillConfig.BROWSER);
         } catch (Exception e) {
