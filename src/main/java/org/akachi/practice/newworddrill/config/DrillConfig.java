@@ -19,11 +19,14 @@ public class DrillConfig {
     public static Integer DRILL_CRAWL_REPEAT;
     public static Integer DRILL_CRAWL_TIME;
     public static String FLAG;
-    public static String BROWSER_PATH;
-    public static String BROWSER;
-    public static String SOUND;
+    //    public static String BROWSER_PATH;
+//    public static String BROWSER;
+    public static String SOUND_PREFIX;
+    public static String SOUND_SUFFIX;
     public static Integer SOUND_WAIT;
     public static Integer INITIAL_SOUND_WAIT;
+    public static String AUDIO_PATH;
+    public static String AUDIO_START;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -39,11 +42,6 @@ public class DrillConfig {
     public void setLoseMaxCount(Integer LOSE_MAX_COUNT) {
         DrillConfig.LOSE_MAX_COUNT = LOSE_MAX_COUNT;
     }
-//
-//    @Value("${drill.totalDrillCount}")
-//    public void setTotalDrillCount(Integer TOTAL_DRILL_COUNT) {
-//        DrillConfig.TOTAL_DRILL_COUNT = TOTAL_DRILL_COUNT;
-//    }
 
     @Value("${drill.default.command}")
     public void setDrillDefaultCommand(String DRILL_DEFAULT_COMMAND) {
@@ -72,31 +70,36 @@ public class DrillConfig {
 
     @Value("${drill.crawlTime}")
     public void setFLAG(Integer drillCrawlTime) {
-        this.DRILL_CRAWL_TIME=drillCrawlTime;
+        this.DRILL_CRAWL_TIME = drillCrawlTime;
     }
 
-    @Value("${drill.browser.path}")
-    public void setBROWSER_PATH(String BROWSER_PATH){
-        this.BROWSER_PATH=BROWSER_PATH;
+    @Value("${drill.sound.prefix}")
+    public void setSOUND_PREFIX(String SOUND_PREFIX) {
+        this.SOUND_PREFIX = SOUND_PREFIX;
     }
 
-    @Value("${drill.browser}")
-    public void setBROWSER(String BROWSER){
-        this.BROWSER=BROWSER;
+    @Value("${drill.sound.suffix}")
+    public void setSOUND_SUFFIX(String SOUND_SUFFIX) {
+        this.SOUND_SUFFIX = SOUND_SUFFIX;
     }
 
-    @Value("${drill.sound}")
-    public void setSOUND(String SOUND){
-        this.SOUND=SOUND;
+    @Value("${drill.audio.path}")
+    public void setAUDIO_PATH(String AUDIO_PATH) {
+        this.AUDIO_PATH = System.getProperty("user.dir") + AUDIO_PATH;
     }
 
     @Value("${drill.sound.wait}")
-    public void setSOUND_WAIT(Integer SOUND_WAIT){
-        this.SOUND_WAIT =SOUND_WAIT;
+    public void setSOUND_WAIT(Integer SOUND_WAIT) {
+        this.SOUND_WAIT = SOUND_WAIT;
     }
 
     @Value("${drill.initial.sound.wait}")
-    public void setINITIAL_SOUND_WAIT(Integer INITIAL_SOUND_WAIT){
-        this.INITIAL_SOUND_WAIT=INITIAL_SOUND_WAIT;
+    public void setINITIAL_SOUND_WAIT(Integer INITIAL_SOUND_WAIT) {
+        this.INITIAL_SOUND_WAIT = INITIAL_SOUND_WAIT;
+    }
+
+    @Value("${drill.audio.start}")
+    public void setAUDIO_START(String AUDIO_START) {
+        this.AUDIO_START = AUDIO_START;
     }
 }

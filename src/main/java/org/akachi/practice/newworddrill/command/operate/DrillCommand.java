@@ -5,9 +5,8 @@ import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
-import org.akachi.practice.newworddrill.entity.NewWord;
 import org.akachi.practice.newworddrill.entity.NewWordProxy;
-import org.akachi.practice.newworddrill.util.DosUtil;
+import org.akachi.practice.newworddrill.util.PlayUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 import org.akachi.practice.newworddrill.util.StringUtil;
 
@@ -387,7 +386,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             /*测试成功则单词测试次数+1并且清零失败次数*/
             successDrillCount++;
             output("正确!");
-            DosUtil.sound(newWordProxy.getWord());
+            PlayUtil.sound(newWordProxy.getWord());
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
         } else {
             loseDrillCount++;
@@ -454,7 +453,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             /*测试成功则单词测试次数+1并且清零失败次数*/
             output("正确!");
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
-            DosUtil.sound(newWordProxy.getWord());
+            PlayUtil.sound(newWordProxy.getWord());
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
             if (newWordProxy.getLoseCount() >= DrillConfig.LOSE_MIN_COUNT) {
                 this.loseDrillCount++;
@@ -508,7 +507,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         output("正确翻译是'" + newWordProxy.getChinese() + "'，您们的翻译是" + wordTest + "");
         String flag = null;
         if (!newWordProxy.getChinese().equals(wordTest)) {
-            DosUtil.sound(newWordProxy.getWord());
+            PlayUtil.sound(newWordProxy.getWord());
             flag = input("如果输入正确请直接回车");
         }
         this.examCount++;

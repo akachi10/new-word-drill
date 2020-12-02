@@ -1,6 +1,6 @@
 package org.akachi.practice.newworddrill.util;
 
-import java.util.List;
+import lombok.SneakyThrows;
 
 /**
  * @Author akachi
@@ -8,10 +8,5 @@ import java.util.List;
  * @Date 2020/10/1 17:56
  */
 public class Test {
-    public static void main(String[] args) throws NoSuchMethodException {
-        List<String> list = null;
-        list.forEach(str -> {
-            System.out.println(str);
-        });
-    }
+
 }
