@@ -41,7 +41,9 @@ public class PlayUtil extends Thread {
             String url = DrillConfig.SOUND_PREFIX + type + DrillConfig.SOUND_SUFFIX + url_word;
             HttpUtil.downloadNet(url, DrillConfig.AUDIO_PATH, wordFileName);
             Integer playTime = getTime(word);
-            play(System.getProperty("user.dir")+DrillConstant.DIAGONAL+DrillConfig.AUDIO_START, 500);
+            if(DrillConfig.AUDIO_START_PLAY) {
+                play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, DrillConfig.AUDIO_START_TIME);
+            }
             play(DrillConfig.AUDIO_PATH + wordFileName, playTime);
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +87,7 @@ public class PlayUtil extends Thread {
     }
 
     public Integer getTime(String word) {
-        int time = new Double((DrillConfig.INITIAL_SOUND_WAIT + word.length() / 10d) * DrillConfig.SOUND_WAIT).intValue();
+        int time = new Double((DrillConfig.INITIAL_SOUND_WAIT + word.length()) * DrillConfig.SOUND_WAIT).intValue();
         return time;
     }
 }

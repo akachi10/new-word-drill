@@ -1,5 +1,6 @@
 package org.akachi.practice.newworddrill.config;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +20,14 @@ public class DrillConfig {
     public static Integer DRILL_CRAWL_REPEAT;
     public static Integer DRILL_CRAWL_TIME;
     public static String FLAG;
-    //    public static String BROWSER_PATH;
-//    public static String BROWSER;
     public static String SOUND_PREFIX;
     public static String SOUND_SUFFIX;
     public static Integer SOUND_WAIT;
     public static Integer INITIAL_SOUND_WAIT;
     public static String AUDIO_PATH;
     public static String AUDIO_START;
+    public static Integer AUDIO_START_TIME;
+    public static Boolean AUDIO_START_PLAY;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -101,5 +102,15 @@ public class DrillConfig {
     @Value("${drill.audio.start}")
     public void setAUDIO_START(String AUDIO_START) {
         this.AUDIO_START = AUDIO_START;
+    }
+
+    @Value("${drill.audio.start.time}")
+    public void setAUDIO_START_TIME(Integer AUDIO_START_TIME) {
+        this.AUDIO_START_TIME = AUDIO_START_TIME;
+    }
+
+    @Value("${drill.audio.start.play}")
+    public void setAUDIO_START_PLAY(Boolean AUDIO_START_PLAY) {
+        this.AUDIO_START_PLAY = AUDIO_START_PLAY;
     }
 }

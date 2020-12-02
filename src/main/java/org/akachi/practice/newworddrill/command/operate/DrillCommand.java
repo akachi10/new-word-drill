@@ -22,7 +22,7 @@ import java.util.*;
 
 public class DrillCommand extends AbstractCommand implements ICommand {
 
-    private NewWordService newWordService = (NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
+    private NewWordService newWordService = SpringApplicationContextHolder.getBean(NewWordService.class);
 
     private int successDrillCount;
     private int loseDrillCount;
