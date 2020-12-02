@@ -35,13 +35,13 @@ public class PlayUtil extends Thread {
      */
     public void run() {
         String url_word = word.replace(DrillConstant.SPACE, DrillConstant.URL_SPACE);
-        String wordFileName = word + DrillConstant.AUDIO_SUFFIX;
-        int type = new Double(Math.random() * 5).intValue();
+        int type = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT).intValue();
+        String wordFileName = type + DrillConstant.UNDERLINE + word + DrillConstant.AUDIO_SUFFIX;
         try {
             String url = DrillConfig.SOUND_PREFIX + type + DrillConfig.SOUND_SUFFIX + url_word;
             HttpUtil.downloadNet(url, DrillConfig.AUDIO_PATH, wordFileName);
             Integer playTime = getTime(word);
-            if(DrillConfig.AUDIO_START_PLAY) {
+            if (DrillConfig.AUDIO_START_PLAY) {
                 play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, DrillConfig.AUDIO_START_TIME);
             }
             play(DrillConfig.AUDIO_PATH + wordFileName, playTime);

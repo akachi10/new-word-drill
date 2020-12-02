@@ -17,5 +17,7 @@ public class DrillConstant {
     public static final Integer HINT_RATING = 10;
     public static final String AUDIO_SUFFIX = ".mp3";
     public static final String DIAGONAL = "/";
+    public static final String UNDERLINE = "_";
+    public static final Integer AUDIO_TYPE_COUNT = 5;
 
 }
