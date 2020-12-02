@@ -35,7 +35,7 @@ public class PlayUtil extends Thread {
      */
     public void run() {
         String url_word = word.replace(DrillConstant.SPACE, DrillConstant.URL_SPACE);
-        int type = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT).intValue();
+        int type = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT).intValue()+1;
         String wordFileName = type + DrillConstant.UNDERLINE + word + DrillConstant.AUDIO_SUFFIX;
         try {
             String url = DrillConfig.SOUND_PREFIX + type + DrillConfig.SOUND_SUFFIX + url_word;
