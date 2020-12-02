@@ -23,13 +23,13 @@ public class HttpUtil {
      */
     public static void downloadNet(String url, String path, String fileName) throws MalformedURLException {
         File pathDir = new File(path);
-        if(!pathDir.exists()){
+        if (!pathDir.exists()) {
             pathDir.mkdirs();
         }
         File theFile = new File(path + "/" + fileName);
         //如果文件存在不需要进行任何操作。
-        if(theFile.exists()){
-            return ;
+        if (theFile.exists()) {
+            return;
         }
         // 下载网络文件
         int bytesum = 0;

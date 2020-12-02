@@ -1,6 +1,5 @@
 package org.akachi.practice.newworddrill.config;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
