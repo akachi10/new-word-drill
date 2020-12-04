@@ -52,8 +52,16 @@ public class PlayUtil extends Thread {
         try {
             HttpUtil.downloadNet(url, DrillConfig.AUDIO_PATH, wordFileName);
             if (DrillConfig.AUDIO_START_PLAY) {
-                play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, null, null, null);
-            }
+                new Thread(){
+                    @Override
+                    public void run(
+                             ){
+                        PlayUtil playUtils = new PlayUtil();
+                        play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, null, null, null);
+                    }
+                }.start();
+                }
+            Thread.sleep(DrillConfig.AUDIO_START_TIME);
             play(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
         } catch (Exception e) {
             e.printStackTrace();
