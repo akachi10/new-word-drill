@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
-import java.util.Date;
 
 /**
  * @Author akachi
@@ -20,15 +19,18 @@ import java.util.Date;
  */
 public class PlayUtil extends Thread {
     private String word;
+    private boolean isWait;
 
     /**
      * 使用浏览器发声
      *
-     * @param word 单词
+     * @param word   单词
+     * @param isWait 是否等待
      */
-    public static void sound(String word) {
+    public static void sound(String word, boolean isWait) {
         PlayUtil dosUtil = new PlayUtil();
         dosUtil.word = word;
+        dosUtil.isWait = isWait;
         dosUtil.start();
     }
 
@@ -37,6 +39,9 @@ public class PlayUtil extends Thread {
      */
     @Override
     public void run() {
+        if(this.isWait){
+            wait(this.word);
+        }
         String url_word = word.replace(DrillConstant.SPACE, DrillConstant.URL_SPACE).toLowerCase();
         int type = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT).intValue() + 1;
         int type2 = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT_SECOND).intValue() + 1;
@@ -46,11 +51,10 @@ public class PlayUtil extends Thread {
         String url2 = DrillConfig.SOUND_PREFIX + type2 + DrillConfig.SOUND_SUFFIX + url_word;
         try {
             HttpUtil.downloadNet(url, DrillConfig.AUDIO_PATH, wordFileName);
-            Integer playTime = getTime(word);
             if (DrillConfig.AUDIO_START_PLAY) {
-                play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, DrillConfig.AUDIO_START_TIME, null, null, null);
+                play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, null, null, null);
             }
-            play(DrillConfig.AUDIO_PATH + wordFileName, playTime, url2, DrillConfig.AUDIO_PATH, wordFileName);
+            play(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,12 +64,11 @@ public class PlayUtil extends Thread {
      * 音频播放
      *
      * @param path     文件位置
-     * @param playTime 等待时间 已弃用
      * @param url      文件下载位置(BUG解决)
      * @param dir      存储路径(BUG解决)
      * @param fileName 文件名(BUG解决) 这里用原文件名
      */
-    public void play(String path, Integer playTime, String url, String dir, String fileName) {
+    public void play(String path, String url, String dir, String fileName) {
 
         FileInputStream fileInputStream = null;
         //创建一个缓冲流
@@ -79,14 +82,14 @@ public class PlayUtil extends Thread {
             long l1 = System.currentTimeMillis();
             player.play();
             long l2 = System.currentTimeMillis();
-            Thread.sleep(playTime);
             player.close();
-            long l3=l2-l1;
-            if(l3<DrillConstant.AUDIO_LENGTH_TIME){
-                throw new AudioLengthException(fileName+"播放时长度不足"+l3+"毫秒.");
+            long l3 = l2 - l1;
+            double LOT = word.length() * DrillConfig.SOUND_WAIT * 0.5;
+            if (l3 < LOT&&l3<DrillConstant.AUDIO_LENGTH_MAX_TIME) {
+                System.out.print(word + "播放时长" + l3 + "毫秒，不足" + LOT + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
+                throw new AudioLengthException(word + "播放时长度不足" + LOT + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
             }
-        } catch (InterruptedException | FileNotFoundException | JavaLayerException|AudioLengthException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException | JavaLayerException | AudioLengthException e) {
             if (url != null && fileName != null && dir != null) {
                 try {
                     File theFile = new File(path);
@@ -99,7 +102,7 @@ public class PlayUtil extends Thread {
                     ex.printStackTrace();
                 }
             }
-        }finally {
+        } finally {
             try {
                 bufferedInputStream.close();
             } catch (Exception e) {
@@ -118,8 +121,23 @@ public class PlayUtil extends Thread {
         }
     }
 
-    public Integer getTime(String word) {
+    /**
+     * 获得等待时长
+     *
+     * @param word 单词
+     * @return
+     */
+    private static Integer getWaitTime(String word) {
         int time = new Double((DrillConfig.INITIAL_SOUND_WAIT + word.length()) * DrillConfig.SOUND_WAIT).intValue();
         return time;
+    }
+
+    public static void wait(String word) {
+        int i = getWaitTime(word);
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

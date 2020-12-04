@@ -22,6 +22,8 @@ public class ExamCommand extends AbstractCommand {
 
     private NewWordService newWordService = (NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
 
+    private boolean isWait;
+
     @Override
     public String introduce() {
         return "执行测验=" + DrillConfig.FLAG;
@@ -90,7 +92,13 @@ public class ExamCommand extends AbstractCommand {
         if ((this.examCount) % DrillConstant.HINT_RATING == 0) {
             output("本次测试一共有"+wordList.size()+"个单词,已经完成"+(successWord.size()+loseWord.size())+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
-        output("请输入'" + newWordProxy.getChinese() + "'的单词");
+        if(newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+            output("请输入'" + newWordProxy.getChinese() + "'的单词");
+        }else{
+            output("请听写单词");
+            PlayUtil.sound(newWordProxy.getWord(),isWait);
+            this.isWait=false;
+        }
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
             /*打印测试报告*/
@@ -101,8 +109,13 @@ public class ExamCommand extends AbstractCommand {
         this.examCount++;
         if (newWordProxy.getWord().equals(wordTest)) {
             /*测验成功则单词测验次数+1并且清零失败次数*/
-            output("正确!");
-            PlayUtil.sound(newWordProxy.getWord());
+            if(newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+                PlayUtil.sound(newWordProxy.getWord(),false);
+                this.isWait=true;
+                output("正确!");
+            }else{
+                output("正确听写'" + newWordProxy.getChinese() + "'");
+            }
             newWordProxy.setDrillCount(+1);
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测验失败*/
             if (newWordProxy.getLoseCount() < DrillConfig.LOSE_MIN_COUNT) {

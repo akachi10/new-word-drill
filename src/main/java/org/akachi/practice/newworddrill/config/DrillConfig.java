@@ -27,6 +27,7 @@ public class DrillConfig {
     public static String AUDIO_START;
     public static Integer AUDIO_START_TIME;
     public static Boolean AUDIO_START_PLAY;
+    public static Integer AUDIO_PLAY_COUNT;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -111,5 +112,10 @@ public class DrillConfig {
     @Value("${drill.audio.start.play}")
     public void setAUDIO_START_PLAY(Boolean AUDIO_START_PLAY) {
         this.AUDIO_START_PLAY = AUDIO_START_PLAY;
+    }
+
+    @Value("${drill.audio.play.count}")
+    public void setAUDIO_PLAY_COUNT(Integer AUDIO_PLAY_COUNT){
+        this.AUDIO_PLAY_COUNT=AUDIO_PLAY_COUNT;
     }
 }
