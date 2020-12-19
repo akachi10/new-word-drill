@@ -9,6 +9,8 @@ import org.akachi.practice.newworddrill.entity.NewWord;
 import org.akachi.practice.newworddrill.util.JSONChangeUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 
+import java.util.List;
+
 /**
  * @author akachi
  */
@@ -42,8 +44,8 @@ public class WordCommand extends AbstractCommand implements ICommand {
         /*newWord.setPhoneticSymbol(input("请输入音标"));*/
         newWord.setChinese(input("请输入" + word + "中文翻译"));
         show(newWord);
-        String s = input("是否存储?y/n");
-        if (DrillConstant.YES.equals(s)) {
+        String s = input("是否存储(回车同yes)?y/n");
+        if (DrillConstant.YES.equals(s)||"".equals(s)||s==null) {
             save(newWord);
         }
     }
@@ -104,9 +106,15 @@ public class WordCommand extends AbstractCommand implements ICommand {
         } catch (Exception e) {
             output("请输入数字!");
         }
-        newWordService.findWordByTime(dayInt).forEach(word -> {
-            output(word.getWord() + "\t\t" + word.getChinese() + ";");
-        });
+        List<NewWord> list =  newWordService.findWordByTime(dayInt);
+        if(list!=null&&list.size()>0) {
+            output("这一天有"+list.size()+"个单词被录入。");
+            list.forEach(word -> {
+                output(word.getWord() + "\t\t" + word.getChinese() + ";");
+            });
+        }else{
+            output("这一天有没有单词被录入。");
+        }
     }
 
 
