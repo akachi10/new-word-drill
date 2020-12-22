@@ -36,7 +36,6 @@ public class WordCommand extends AbstractCommand implements ICommand {
      * @param word 单词
      */
     private void insert(String word) {
-        PlayUtil.sound(word, false);
         NewWord newWord = new NewWord();
         newWord.setFlag(DrillConfig.FLAG);
         if (word != null && word.length() > 0) {
@@ -44,6 +43,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
         }
         newWord.setWord(word);
         /*newWord.setPhoneticSymbol(input("请输入音标"));*/
+        PlayUtil.sound(word, false);
         newWord.setChinese(input("请输入" + word + "中文翻译"));
         show(newWord);
         String s = input("是否存储(回车同yes)?y/n");
