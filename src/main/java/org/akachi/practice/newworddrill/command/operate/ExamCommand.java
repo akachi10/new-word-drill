@@ -90,14 +90,14 @@ public class ExamCommand extends AbstractCommand {
     private void exam(NewWordProxy newWordProxy) {
         /*测验输入与输出*/
         if ((this.examCount) % DrillConstant.HINT_RATING == 0) {
-            output("本次测试一共有"+wordList.size()+"个单词,已经完成"+(successWord.size()+loseWord.size())+"个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
+            output("本次测试一共有" + wordList.size() + "个单词,已经完成" + (successWord.size() + loseWord.size()) + "个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
-        if(newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+        if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
             output("请输入'" + newWordProxy.getChinese() + "'的单词");
-        }else{
+        } else {
             output("请听写单词");
-            PlayUtil.sound(newWordProxy.getWord(),isWait);
-            this.isWait=false;
+            PlayUtil.sound(newWordProxy.getWord(), isWait);
+            this.isWait = false;
         }
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
@@ -109,11 +109,11 @@ public class ExamCommand extends AbstractCommand {
         this.examCount++;
         if (newWordProxy.getWord().equals(wordTest)) {
             /*测验成功则单词测验次数+1并且清零失败次数*/
-            if(newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
-                PlayUtil.sound(newWordProxy.getWord(),false);
-                this.isWait=true;
+            if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+                PlayUtil.sound(newWordProxy.getWord(), false);
+                this.isWait = true;
                 output("正确!");
-            }else{
+            } else {
                 output("正确听写'" + newWordProxy.getChinese() + "'");
             }
             newWordProxy.setDrillCount(+1);

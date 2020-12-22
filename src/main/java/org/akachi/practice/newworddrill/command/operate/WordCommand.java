@@ -7,6 +7,7 @@ import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.entity.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWord;
 import org.akachi.practice.newworddrill.util.JSONChangeUtil;
+import org.akachi.practice.newworddrill.util.PlayUtil;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
      * @param word 单词
      */
     private void insert(String word) {
+        PlayUtil.sound(word, false);
         NewWord newWord = new NewWord();
         newWord.setFlag(DrillConfig.FLAG);
         if (word != null && word.length() > 0) {
@@ -45,7 +47,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
         newWord.setChinese(input("请输入" + word + "中文翻译"));
         show(newWord);
         String s = input("是否存储(回车同yes)?y/n");
-        if (DrillConstant.YES.equals(s)||"".equals(s)||s==null) {
+        if (DrillConstant.YES.equals(s) || "".equals(s) || s == null) {
             save(newWord);
         }
     }
@@ -106,13 +108,13 @@ public class WordCommand extends AbstractCommand implements ICommand {
         } catch (Exception e) {
             output("请输入数字!");
         }
-        List<NewWord> list =  newWordService.findWordByTime(dayInt);
-        if(list!=null&&list.size()>0) {
-            output("这一天有"+list.size()+"个单词被录入。");
+        List<NewWord> list = newWordService.findWordByTime(dayInt);
+        if (list != null && list.size() > 0) {
+            output("这一天有" + list.size() + "个单词被录入。");
             list.forEach(word -> {
                 output(word.getWord() + "\t\t" + word.getChinese() + ";");
             });
-        }else{
+        } else {
             output("这一天有没有单词被录入。");
         }
     }

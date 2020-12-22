@@ -391,7 +391,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             /*测试成功则单词测试次数+1并且清零失败次数*/
             successDrillCount++;
             output("正确!");
-            PlayUtil.sound(newWordProxy.getWord(),false);
+            PlayUtil.sound(newWordProxy.getWord(), false);
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
         } else {
             loseDrillCount++;
@@ -451,8 +451,8 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             output("请输入'" + newWordProxy.getChinese() + "'的单词");
         } else {
             output("请听写单词");
-            PlayUtil.sound(newWordProxy.getWord(),this.isWait);
-            this.isWait=false;
+            PlayUtil.sound(newWordProxy.getWord(), this.isWait);
+            this.isWait = false;
         }
         String wordTest = input();
         if (DrillConstant.TEST_END.equals(wordTest)) {
@@ -463,11 +463,11 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         if (newWordProxy.getWord().equals(wordTest)) {
             /*测试成功则单词测试次数+1并且清零失败次数*/
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
-            if(newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
-                PlayUtil.sound(newWordProxy.getWord(),false);
-                this.isWait=true;
+            if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+                PlayUtil.sound(newWordProxy.getWord(), false);
+                this.isWait = true;
                 output("正确!");
-            }else{
+            } else {
                 output("正确听写'" + newWordProxy.getChinese() + "'");
             }
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
@@ -523,7 +523,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         output("正确翻译是'" + newWordProxy.getChinese() + "'，您们的翻译是" + wordTest + "");
         String flag = null;
         if (!newWordProxy.getChinese().equals(wordTest)) {
-            PlayUtil.sound(newWordProxy.getWord(),false);
+            PlayUtil.sound(newWordProxy.getWord(), false);
             flag = input("如果输入正确请直接回车");
         }
         this.examCount++;
