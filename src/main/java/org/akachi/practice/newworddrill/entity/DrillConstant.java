@@ -19,7 +19,7 @@ public class DrillConstant {
     public static final String JSON_SUFFIX = ".json";
     public static final String DIAGONAL = "/";
     public static final String UNDERLINE = "_";
-    public static final Integer AUDIO_TYPE_COUNT = 2;
+    public static final Integer AUDIO_TYPE_COUNT = 3;
     public static final Integer AUDIO_TYPE_COUNT_SECOND = 5;
     public static final Integer AUDIO_LENGTH_MAX_TIME = 500;
 

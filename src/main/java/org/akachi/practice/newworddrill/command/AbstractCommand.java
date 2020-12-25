@@ -34,7 +34,7 @@ public abstract class AbstractCommand implements ICommand {
         output(AbstractCommand.ANNOTATION + this.introduce() + AbstractCommand.ANNOTATION);
         StringBuffer sb = new StringBuffer();
         sb.append("可以执行以下" +
-                "命令[" + DrillConstant.HELP);
+                "命令["+DrillConstant.HELP+","+ DrillConstant.END);
         for (Method method : this.getClass().getDeclaredMethods()) {
             StringBuffer params = new StringBuffer();
             Parameter[] parameters = method.getParameters();

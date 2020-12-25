@@ -120,6 +120,7 @@ public class WordCommand extends AbstractCommand implements ICommand {
         if (newWord == null) {
             output("单词不存在");
         } else {
+            PlayUtil.sound(newWord.getWord(),false);
             output("单词:" + newWord.getWord());
             output("中文:" + newWord.getChinese());
             if (newWord.getPhoneticSymbol() != null && !"".equals(newWord.getPhoneticSymbol())) {

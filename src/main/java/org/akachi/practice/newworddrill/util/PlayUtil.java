@@ -70,7 +70,7 @@ public class PlayUtil extends Thread {
             Thread.sleep(DrillConfig.AUDIO_START_TIME);
             int i = play(file);
             if (i == -1) {
-                reDown(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
+                reDown(DrillConfig.AUDIO_PATH + wordFileName, url2, wordFileName, DrillConfig.AUDIO_PATH);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -14,6 +14,6 @@ public class AudioLengthException extends RuntimeException {
      */
     public AudioLengthException(String word, long playTime, Double theoryMinPlayTime) {
         super(word + "播放时长" + playTime + "毫秒，不足" + theoryMinPlayTime + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
-        System.out.print(word + "播放时长" + playTime + "毫秒，不足" + theoryMinPlayTime + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
+        System.out.println(word + "播放时长" + playTime + "毫秒，不足" + theoryMinPlayTime + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
     }
 }
