@@ -21,7 +21,7 @@ public class HttpUtil {
      * @param fileName 存储文件名
      * @throws MalformedURLException URL异常
      */
-    public static void downloadNet(String url, String path, String fileName) throws MalformedURLException {
+    public static File downloadNet(String url, String path, String fileName) throws MalformedURLException {
         File pathDir = new File(path);
         if (!pathDir.exists()) {
             pathDir.mkdirs();
@@ -29,7 +29,7 @@ public class HttpUtil {
         File theFile = new File(path + "/" + fileName);
         //如果文件存在不需要进行任何操作。
         if (theFile.exists()) {
-            return;
+            return theFile;
         }
         // 下载网络文件
         int bytesum = 0;
@@ -62,6 +62,14 @@ public class HttpUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            theFile = new File(path + "/" + fileName);
+            //如果文件存在不需要进行任何操作。
+            if (theFile.exists()) {
+                return theFile;
+            } else {
+                return null;
+            }
         }
     }
 }

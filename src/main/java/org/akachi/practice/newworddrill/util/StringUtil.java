@@ -1,5 +1,7 @@
 package org.akachi.practice.newworddrill.util;
 
+import org.akachi.practice.newworddrill.entity.DrillConstant;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,6 +24,26 @@ public class StringUtil {
         Matcher m = p.matcher(content);
         String result = m.replaceAll(newString);
         return result;
+    }
+
+    /**
+     * 处理成可读存储的文件名
+     *
+     * @param word
+     * @return
+     */
+    public static String replaceSaveFileName(String word) {
+        return word.replace('?', '_').replace('!', '_');
+    }
+
+    /**
+     * 吧短语的空格替换掉
+     *
+     * @param phrase 替换空格
+     * @return 替换空格为%20
+     */
+    public static String replaceUrl(String phrase) {
+        return phrase.replace(DrillConstant.SPACE, DrillConstant.URL_SPACE).toLowerCase();
     }
 
     public static String randomShow(String content, float scale, List<Integer> seed) {

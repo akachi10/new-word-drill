@@ -19,17 +19,6 @@ public class WordCommand extends AbstractCommand implements ICommand {
 
     private static NewWordService newWordService = (NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
 
-//    /**
-//     * 开始创建单词
-//     */
-//    public void create(){
-//        NewWord newWord = new NewWord();
-//        newWord.setWord(input("请输入单词"));
-//        /*newWord.setPhoneticSymbol(input("请输入音标"));*/
-//        newWord.setChinese(input("请输入中文翻译"));
-//        save(newWord);
-//    }
-
     /**
      * 开始创建单词
      *
@@ -165,27 +154,6 @@ public class WordCommand extends AbstractCommand implements ICommand {
             show(newWord);
         }
     }
-
-//    /**
-//     * 修改单词
-//     */
-//    public void alterWord(){
-//        newWord.setWord(input("请输入单词"));
-//    }
-//
-//    /**
-//     * 修改音标
-//     */
-//    public void alterPhoneticSymbol(){
-//        newWord.setPhoneticSymbol(input("请输入音标"));
-//    }
-//
-//    /**
-//     * 修改中文
-//     */
-//    public void alterChinese(){
-//        newWord.setChinese(input("请输入中文翻译"));
-//    }
 
     @Override
     public String introduce() {

@@ -24,10 +24,12 @@ public class DrillConfig {
     public static Integer SOUND_WAIT;
     public static Integer INITIAL_SOUND_WAIT;
     public static String AUDIO_PATH;
+    public static String JSON_PATH;
     public static String AUDIO_START;
     public static Integer AUDIO_START_TIME;
     public static Boolean AUDIO_START_PLAY;
     public static Integer AUDIO_PLAY_COUNT;
+    public static String DRILL_WORD_EXPLAIN_DICTIONARY_URL;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -89,6 +91,11 @@ public class DrillConfig {
         this.AUDIO_PATH = System.getProperty("user.dir") + AUDIO_PATH;
     }
 
+    @Value("${drill.audio.json}")
+    public void setJSON_PATH(String JSON_PATH) {
+        this.JSON_PATH = System.getProperty("user.dir") + JSON_PATH;
+    }
+
     @Value("${drill.sound.wait}")
     public void setSOUND_WAIT(Integer SOUND_WAIT) {
         this.SOUND_WAIT = SOUND_WAIT;
@@ -115,7 +122,12 @@ public class DrillConfig {
     }
 
     @Value("${drill.audio.play.count}")
-    public void setAUDIO_PLAY_COUNT(Integer AUDIO_PLAY_COUNT){
-        this.AUDIO_PLAY_COUNT=AUDIO_PLAY_COUNT;
+    public void setAUDIO_PLAY_COUNT(Integer AUDIO_PLAY_COUNT) {
+        this.AUDIO_PLAY_COUNT = AUDIO_PLAY_COUNT;
+    }
+
+    @Value("${drill.word.explain.dictionary.url}")
+    public void setDRILL_WORD_EXPLAIN_DICTIONARY_URL(String DRILL_WORD_EXPLAIN_DICTIONARY_URL) {
+        this.DRILL_WORD_EXPLAIN_DICTIONARY_URL = DRILL_WORD_EXPLAIN_DICTIONARY_URL;
     }
 }

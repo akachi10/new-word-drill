@@ -39,77 +39,96 @@ public class PlayUtil extends Thread {
      */
     @Override
     public void run() {
-        if(this.isWait){
+        if (this.isWait) {
             wait(this.word);
         }
-        String url_word = word.replace(DrillConstant.SPACE, DrillConstant.URL_SPACE).toLowerCase();
+        String url_word = StringUtil.replaceUrl(word);
         int type = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT).intValue() + 1;
         int type2 = new Double(Math.random() * DrillConstant.AUDIO_TYPE_COUNT_SECOND).intValue() + 1;
-        String saveWord = word.replace('?', '_').replace('!', '_');
+        String saveWord = StringUtil.replaceSaveFileName(word);
         String wordFileName = type + DrillConstant.UNDERLINE + saveWord + DrillConstant.AUDIO_SUFFIX;
         String url = DrillConfig.SOUND_PREFIX + type + DrillConfig.SOUND_SUFFIX + url_word;
         String url2 = DrillConfig.SOUND_PREFIX + type2 + DrillConfig.SOUND_SUFFIX + url_word;
         try {
-            HttpUtil.downloadNet(url, DrillConfig.AUDIO_PATH, wordFileName);
+            File file = HttpUtil.downloadNet(url, DrillConfig.AUDIO_PATH, wordFileName);
             if (DrillConfig.AUDIO_START_PLAY) {
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run(
-                             ){
-                        PlayUtil playUtils = new PlayUtil();
-                        play(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START, null, null, null);
+                    ) {
+                        int i = play(
+                                new File(
+                                        System.getProperty("user.dir") +
+                                                DrillConstant.DIAGONAL +
+                                                DrillConfig.AUDIO_START));
+                        if (i == -1) {
+                            reDown(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
+                        }
                     }
                 }.start();
-                }
+            }
             Thread.sleep(DrillConfig.AUDIO_START_TIME);
-            play(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
+            int i = play(file);
+            if (i == -1) {
+                reDown(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
+     * 解决bug从新下载
+     *
+     * @param path     路径
+     * @param url      地址
+     * @param fileName 名字
+     * @param dir      地址
+     */
+    private void reDown(String path, String url, String fileName, String dir) {
+        if (url != null && fileName != null && dir != null) {
+            try {
+                File theFile = new File(path);
+                //如果文件存在不需要进行任何操作。
+                if (theFile.exists()) {
+                    theFile.delete();
+                }
+                HttpUtil.downloadNet(url, dir, fileName);
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * 音频播放
      *
-     * @param path     文件位置
-     * @param url      文件下载位置(BUG解决)
-     * @param dir      存储路径(BUG解决)
-     * @param fileName 文件名(BUG解决) 这里用原文件名
+     * @param file 文件名
+     * @return 返回代码 -数是错误
      */
-    public void play(String path, String url, String dir, String fileName) {
+    public int play(File file) {
 
         FileInputStream fileInputStream = null;
         //创建一个缓冲流
         BufferedInputStream bufferedInputStream = null;
         try {
-            File f = new File(path);
-            fileInputStream = new FileInputStream(f);
+            fileInputStream = new FileInputStream(file);
             //创建一个缓冲流
             bufferedInputStream = new BufferedInputStream(fileInputStream);
             Player player = new Player(bufferedInputStream);
-            long l1 = System.currentTimeMillis();
+            long playStartTime = System.currentTimeMillis();
             player.play();
-            long l2 = System.currentTimeMillis();
+            long playEndTime = System.currentTimeMillis();
             player.close();
-            long l3 = l2 - l1;
-            double LOT = word.length() * DrillConfig.SOUND_WAIT * 0.5;
-            if (l3 < LOT&&l3<DrillConstant.AUDIO_LENGTH_MAX_TIME) {
-                System.out.print(word + "播放时长" + l3 + "毫秒，不足" + LOT + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
-                throw new AudioLengthException(word + "播放时长度不足" + LOT + "毫秒。音频文件可能损坏、系统会删除此音频不必理会。");
+            long playTime = playEndTime - playStartTime;
+            double theoryMinPlayTime = word.length() * DrillConfig.SOUND_WAIT * 0.5;
+            if (playTime < theoryMinPlayTime && playTime < DrillConstant.AUDIO_LENGTH_MAX_TIME) {
+                throw new AudioLengthException(word, playTime, theoryMinPlayTime);
             }
-        } catch (FileNotFoundException | JavaLayerException | AudioLengthException e) {
-            if (url != null && fileName != null && dir != null) {
-                try {
-                    File theFile = new File(path);
-                    //如果文件存在不需要进行任何操作。
-                    if (theFile.exists()) {
-                        theFile.delete();
-                    }
-                    HttpUtil.downloadNet(url, dir, fileName);
-                } catch (MalformedURLException ex) {
-                    ex.printStackTrace();
-                }
-            }
+        } catch (FileNotFoundException | JavaLayerException e) {
+            return -2;
+        } catch (AudioLengthException e) {
+            return -1;
         } finally {
             try {
                 bufferedInputStream.close();
@@ -127,6 +146,7 @@ public class PlayUtil extends Thread {
                 e.printStackTrace();
             }
         }
+        return 0;
     }
 
     /**

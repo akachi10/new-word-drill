@@ -110,7 +110,7 @@ public abstract class AbstractCommand implements ICommand {
      *
      * @param output 输出内容
      */
-    protected void output(String output) {
+    public void output(String output) {
         System.out.println("[" + this.getClass().getSimpleName() + "#" + DrillConfig.FLAG + "]:" + output);
     }
 
