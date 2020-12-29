@@ -228,7 +228,7 @@ public abstract class AbstractCommand implements ICommand {
         String dictionary = explain(word);
         if (!dictionary.equals(chinese)) {
             output(ANNOTATION+"词典翻译"+ANNOTATION);
-            output(dictionary.toLowerCase().replace(word.toLowerCase(),""));
+            output(dictionary);
             output(ANNOTATION+"========"+ANNOTATION);
         }
     }

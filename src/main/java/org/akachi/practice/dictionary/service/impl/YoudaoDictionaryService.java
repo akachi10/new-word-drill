@@ -36,7 +36,7 @@ public class YoudaoDictionaryService implements DictionaryService {
         } else if (jsonObject.getAsJsonArray(YoudaoConstant.TRANSLATION) != null) {
             explain = jsonObject.getAsJsonArray(YoudaoConstant.TRANSLATION).toString();
         }
-        return explain;
+        return explain.toLowerCase().replace(phrase.toLowerCase(), "");
     }
 
     @Override
@@ -59,7 +59,9 @@ public class YoudaoDictionaryService implements DictionaryService {
      * @return 返回值
      */
     private JsonObject getJsonObject(String phrase) {
-        return downloadJson(phrase);
+        File file = downloadJson(phrase);
+        String json = FileUtil.getFileString(file);
+        return new JsonParser().parse(json).getAsJsonObject();
     }
 
 
@@ -82,7 +84,7 @@ public class YoudaoDictionaryService implements DictionaryService {
      * @param word 存储单词
      * @return 返回json
      */
-    private JsonObject downloadJson(String word) {
+    public File downloadJson(String word) {
         String urlWord = StringUtil.replaceUrl(word);
         String saveWord = StringUtil.replaceSaveFileName(word);
         String wordFileName = saveWord + DrillConstant.JSON_SUFFIX;
@@ -90,8 +92,7 @@ public class YoudaoDictionaryService implements DictionaryService {
         File file = null;
         try {
             file = HttpUtil.downloadNet(url, DrillConfig.JSON_PATH, wordFileName);
-            String json = FileUtil.getFileString(file);
-            return new JsonParser().parse(json).getAsJsonObject();
+            return file;
         } catch (JsonSyntaxException e) {
             System.out.println("[YoudaoDictionaryException]:单词" + word + "无法正确转换为json，系统会自动删除无需处理");
             if (file != null && file.exists()) {
