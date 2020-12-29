@@ -1,18 +1,27 @@
 package org.akachi.practice.newworddrill.command;
 
+import org.akachi.practice.dictionary.service.DictionaryService;
+import org.akachi.practice.dictionary.service.impl.YoudaoDictionaryService;
+import org.akachi.practice.newworddrill.Service.NewWordService;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
+import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * @author akachi
  */
 public abstract class AbstractCommand implements ICommand {
+
+    protected DictionaryService dictionaryService = SpringApplicationContextHolder.getBean(YoudaoDictionaryService.class);
+
+    protected NewWordService newWordService = SpringApplicationContextHolder.getBean(NewWordService.class);
 
     static final String ANNOTATION = "===================";
 
@@ -34,7 +43,7 @@ public abstract class AbstractCommand implements ICommand {
         output(AbstractCommand.ANNOTATION + this.introduce() + AbstractCommand.ANNOTATION);
         StringBuffer sb = new StringBuffer();
         sb.append("可以执行以下" +
-                "命令["+DrillConstant.HELP+","+ DrillConstant.END);
+                "命令[" + DrillConstant.END + "," + DrillConstant.HELP);
         for (Method method : this.getClass().getDeclaredMethods()) {
             StringBuffer params = new StringBuffer();
             Parameter[] parameters = method.getParameters();
@@ -106,19 +115,28 @@ public abstract class AbstractCommand implements ICommand {
     }
 
     /**
+     * 获得当前坐标
+     *
+     * @return
+     */
+    public String getSimpleName() {
+        return this.getClass().getSimpleName() + "#" + DrillConfig.FLAG;
+    }
+
+    /**
      * 输出内容
      *
      * @param output 输出内容
      */
     public void output(String output) {
-        System.out.println("[" + this.getClass().getSimpleName() + "#" + DrillConfig.FLAG + "]:" + output);
+        System.out.println("[" + getSimpleName() + "]:" + output);
     }
 
     /**
      * 等待输入时输出
      */
-    protected void output() {
-        System.out.print("[" + this.getClass().getSimpleName() + "#" + DrillConfig.FLAG + "]:");
+    public void output() {
+        System.out.print("[" + getSimpleName() + "]:");
     }
 
     /**
@@ -174,4 +192,60 @@ public abstract class AbstractCommand implements ICommand {
         }
         return s;
     }
+
+
+    /**
+     * 打印例句
+     *
+     * @param phrase 单词或短语
+     */
+    protected void example(String phrase) {
+        try {
+            List<String> list = dictionaryService.explainWeb(phrase);
+            if (list == null && list.size() == 0) {
+                return;
+            }
+            output("例子:");
+            list.forEach(
+                    example -> {
+                        output(example);
+                    }
+            );
+        } catch (NullPointerException e) {
+            output("未查询到例子:");
+        }
+    }
+
+
+
+    /**
+     * 词典翻译
+     *
+     * @param word
+     * @param chinese
+     */
+    protected void dictionary(String word, String chinese) {
+        String dictionary = explain(word);
+        if (!dictionary.equals(chinese)) {
+            output(ANNOTATION+"词典翻译"+ANNOTATION);
+            output(dictionary.toLowerCase().replace(word.toLowerCase(),""));
+            output(ANNOTATION+"========"+ANNOTATION);
+        }
+    }
+
+    /**
+     * 获得翻译
+     *
+     * @param word 单词
+     * @return 中文翻译
+     */
+    protected String explain(String word) {
+        try {
+            return dictionaryService.explain(word);
+        } catch (NullPointerException e) {
+            output("不能翻译此单词");
+        }
+        return null;
+    }
+
 }

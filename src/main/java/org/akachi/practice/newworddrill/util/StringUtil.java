@@ -1,6 +1,6 @@
 package org.akachi.practice.newworddrill.util;
 
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

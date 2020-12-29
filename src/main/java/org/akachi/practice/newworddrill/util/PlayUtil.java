@@ -3,7 +3,7 @@ package org.akachi.practice.newworddrill.util;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
 import org.akachi.practice.newworddrill.exception.AudioLengthException;
 
 import java.io.BufferedInputStream;
@@ -57,10 +57,7 @@ public class PlayUtil extends Thread {
                     public void run(
                     ) {
                         int i = play(
-                                new File(
-                                        System.getProperty("user.dir") +
-                                                DrillConstant.DIAGONAL +
-                                                DrillConfig.AUDIO_START));
+                                new File(System.getProperty("user.dir") + DrillConstant.DIAGONAL + DrillConfig.AUDIO_START));
                         if (i == -1) {
                             reDown(DrillConfig.AUDIO_PATH + wordFileName, url2, DrillConfig.AUDIO_PATH, wordFileName);
                         }
@@ -123,7 +120,7 @@ public class PlayUtil extends Thread {
             long playTime = playEndTime - playStartTime;
             double theoryMinPlayTime = word.length() * DrillConfig.SOUND_WAIT * 0.5;
             if (playTime < theoryMinPlayTime && playTime < DrillConstant.AUDIO_LENGTH_MAX_TIME) {
-                throw new AudioLengthException(word, playTime, theoryMinPlayTime);
+                throw new AudioLengthException(word, playTime, theoryMinPlayTime, "[playUtilException]");
             }
         } catch (FileNotFoundException | JavaLayerException e) {
             return -2;

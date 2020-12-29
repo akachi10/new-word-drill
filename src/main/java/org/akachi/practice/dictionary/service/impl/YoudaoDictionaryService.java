@@ -4,15 +4,14 @@ import com.google.gson.*;
 import org.akachi.practice.dictionary.controller.YoudaoConstant;
 import org.akachi.practice.dictionary.service.DictionaryService;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
+import org.akachi.practice.newworddrill.util.FileUtil;
 import org.akachi.practice.newworddrill.util.HttpUtil;
 import org.akachi.practice.newworddrill.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,17 +26,16 @@ public class YoudaoDictionaryService implements DictionaryService {
     public String explain(String phrase) {
         JsonObject jsonObject = getJsonObject(phrase);
         if (jsonObject == null ||
-                jsonObject.getAsJsonObject(YoudaoConstant.ERRORCODE).getAsInt() != YoudaoConstant.ERRORCODE_SUCCESS) {
+                jsonObject.getAsJsonPrimitive(YoudaoConstant.ERRORCODE).getAsInt() != YoudaoConstant.ERRORCODE_SUCCESS) {
             return null;
         }
         JsonArray explainsArray = this.getExplains(jsonObject);
         String explain = "";
         if (explainsArray != null) {
             explain = explainsArray.toString();
-        } else {
-            jsonObject.getAsJsonArray(YoudaoConstant.TRANSLATION);
+        } else if (jsonObject.getAsJsonArray(YoudaoConstant.TRANSLATION) != null) {
+            explain = jsonObject.getAsJsonArray(YoudaoConstant.TRANSLATION).toString();
         }
-
         return explain;
     }
 
@@ -45,11 +43,13 @@ public class YoudaoDictionaryService implements DictionaryService {
     public List<String> explainWeb(String phrase) {
         JsonObject jsonObject = getJsonObject(phrase);
         JsonArray web = jsonObject.getAsJsonArray("web");
+        List<String> list = new ArrayList<>();
         for (JsonElement elment : web) {
-            String key = elment.getAsJsonObject().getAsJsonObject("key").getAsString();
-            String value = elment.getAsJsonObject().getAsJsonArray("value").getAsString();
+            String key = elment.getAsJsonObject().getAsJsonPrimitive("key").getAsString();
+            String value = elment.getAsJsonObject().getAsJsonArray("value").toString();
+            list.add(key + ";翻译:" + value);
         }
-        return null;
+        return list;
     }
 
     /**
@@ -59,8 +59,7 @@ public class YoudaoDictionaryService implements DictionaryService {
      * @return 返回值
      */
     private JsonObject getJsonObject(String phrase) {
-        downloadJson(phrase);
-        return null;
+        return downloadJson(phrase);
     }
 
 
@@ -71,8 +70,10 @@ public class YoudaoDictionaryService implements DictionaryService {
      * @return 翻译内容
      */
     private JsonArray getExplains(JsonObject jsonObject) {
-        return jsonObject.getAsJsonObject(YoudaoConstant.BASIC).getAsJsonArray(YoudaoConstant.BASIC_EXPLAINS);
-
+        if (jsonObject.getAsJsonObject(YoudaoConstant.BASIC) != null) {
+            return jsonObject.getAsJsonObject(YoudaoConstant.BASIC).getAsJsonArray(YoudaoConstant.BASIC_EXPLAINS);
+        }
+        return null;
     }
 
     /**
@@ -86,29 +87,20 @@ public class YoudaoDictionaryService implements DictionaryService {
         String saveWord = StringUtil.replaceSaveFileName(word);
         String wordFileName = saveWord + DrillConstant.JSON_SUFFIX;
         String url = DrillConfig.DRILL_WORD_EXPLAIN_DICTIONARY_URL + urlWord;
+        File file = null;
         try {
-            File file = HttpUtil.downloadNet(url, DrillConfig.JSON_PATH, wordFileName);
-            String json = getFileString(file);
+            file = HttpUtil.downloadNet(url, DrillConfig.JSON_PATH, wordFileName);
+            String json = FileUtil.getFileString(file);
             return new JsonParser().parse(json).getAsJsonObject();
+        } catch (JsonSyntaxException e) {
+            System.out.println("[YoudaoDictionaryException]:单词" + word + "无法正确转换为json，系统会自动删除无需处理");
+            if (file != null && file.exists()) {
+                file.delete();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private String getFileString(File file) {
-        String str = "";
-        try {
-            FileInputStream in = new FileInputStream(file);
-            // size 为字串的长度 ，这里一次性读完
-            int size = in.available();
-            byte[] buffer = new byte[size];
-            int read = in.read(buffer);
-            in.close();
-            str = new String(buffer, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return str;
-    }
 }

@@ -1,14 +1,13 @@
 package org.akachi.practice.newworddrill.command.operate;
 
-import org.akachi.practice.newworddrill.Service.NewWordService;
 import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWord;
+import org.akachi.practice.newworddrill.util.FileUtil;
 import org.akachi.practice.newworddrill.util.JSONChangeUtil;
 import org.akachi.practice.newworddrill.util.PlayUtil;
-import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 
 import java.util.List;
 
@@ -16,8 +15,6 @@ import java.util.List;
  * @author akachi
  */
 public class WordCommand extends AbstractCommand implements ICommand {
-
-    private static NewWordService newWordService = (NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
 
     /**
      * 开始创建单词
@@ -33,7 +30,16 @@ public class WordCommand extends AbstractCommand implements ICommand {
         newWord.setWord(word);
         /*newWord.setPhoneticSymbol(input("请输入音标"));*/
         PlayUtil.sound(word, false);
-        newWord.setChinese(input("请输入" + word + "中文翻译"));
+        /*打印例句*/
+        example(word);
+        String defaultChinese = explain(word);
+        output("中文翻译默认值[" + explain(word) + "]");
+        String chinese = input("请输入[" + word + "]中文翻译，使用默认值请回车。");
+        if (null == chinese || "".equals(chinese)) {
+            newWord.setChinese(defaultChinese);
+        } else {
+            newWord.setChinese(chinese);
+        }
         show(newWord);
         String s = input("是否存储(回车同yes)?y/n");
         if (DrillConstant.YES.equals(s) || "".equals(s) || s == null) {
@@ -120,7 +126,8 @@ public class WordCommand extends AbstractCommand implements ICommand {
         if (newWord == null) {
             output("单词不存在");
         } else {
-            PlayUtil.sound(newWord.getWord(),false);
+            this.example(word);
+            PlayUtil.sound(newWord.getWord(), false);
             output("单词:" + newWord.getWord());
             output("中文:" + newWord.getChinese());
             if (newWord.getPhoneticSymbol() != null && !"".equals(newWord.getPhoneticSymbol())) {
@@ -160,4 +167,53 @@ public class WordCommand extends AbstractCommand implements ICommand {
     public String introduce() {
         return "操作生词=" + DrillConfig.FLAG;
     }
+
+    /**
+     * 导入单词
+     *
+     * @param fileName
+     */
+    public void inputs(String fileName) {
+        List<String> list = FileUtil.getFileArray(fileName);
+        if (list.size() == 0) {
+            output("list不存在");
+        } else {
+            output("开始导入");
+        }
+        list.forEach(
+                str -> {
+                    insert(str);
+                }
+        );
+    }
+
+//    /**
+//     *
+//     * @param word
+//     */
+//    public void insertzd(String word) {
+//        NewWord newWord = new NewWord();
+//        newWord.setFlag(DrillConfig.FLAG);
+//        if (word != null && word.length() > 0) {
+//            word = word.replace("_", " ");
+//        }
+//        newWord.setWord(word);
+//        /*newWord.setPhoneticSymbol(input("请输入音标"));*/
+//        PlayUtil.sound(word, false);
+//        /*打印例句*/
+//        example(word);
+//        String defaultChinese = explain(word);
+//        output("中文翻译默认值[" + explain(word) + "]");
+//        String chinese = input("请输入[" + word + "]中文翻译，使用默认值请回车。");
+//        if (null == chinese || "".equals(chinese)) {
+//            newWord.setChinese(defaultChinese);
+//        } else {
+//            newWord.setChinese(chinese);
+//        }
+//        show(newWord);
+//        String s = input("是否存储(回车同yes)?y/n");
+//        if (DrillConstant.YES.equals(s) || "".equals(s) || s == null) {
+//            save(newWord);
+//        }
+//    }
 }

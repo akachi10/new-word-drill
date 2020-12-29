@@ -1,0 +1,1 @@
+java -jar target\new-word-drill-0.1.1-SNAPSHOT.jar

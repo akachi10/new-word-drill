@@ -1,5 +1,11 @@
-= 问题 =
+= 安装过程
 
-现
+. 安装JDK8
 
-== 断
+. 安装MYSQL数据库 5.6
+
+. 在mysql中创建drill用户并设置密码为drill
+
+. 执行word_drill.sql
+
+. 运行dirll.bat 或 dirll.sh

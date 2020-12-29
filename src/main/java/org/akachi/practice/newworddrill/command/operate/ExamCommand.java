@@ -1,15 +1,16 @@
 package org.akachi.practice.newworddrill.command.operate;
 
-import org.akachi.practice.newworddrill.Service.NewWordService;
 import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWordProxy;
 import org.akachi.practice.newworddrill.util.PlayUtil;
-import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 import org.akachi.practice.newworddrill.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 测验类
@@ -19,8 +20,6 @@ import java.util.*;
  * @Date 2020/10/2 22:53
  */
 public class ExamCommand extends AbstractCommand {
-
-    private NewWordService newWordService = (NewWordService) SpringApplicationContextHolder.getBean(NewWordService.class);
 
     private boolean isWait;
 
@@ -93,6 +92,7 @@ public class ExamCommand extends AbstractCommand {
             output("本次测试一共有" + wordList.size() + "个单词,已经完成" + (successWord.size() + loseWord.size()) + "个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
         if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+            this.dictionary(newWordProxy.getWord(),newWordProxy.getChinese());
             output("请输入'" + newWordProxy.getChinese() + "'的单词");
         } else {
             output("请听写单词");
@@ -108,6 +108,8 @@ public class ExamCommand extends AbstractCommand {
         }
         this.examCount++;
         if (newWordProxy.getWord().equals(wordTest)) {
+            /*打打印例句*/
+            example(newWordProxy.getWord());
             /*测验成功则单词测验次数+1并且清零失败次数*/
             if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
                 PlayUtil.sound(newWordProxy.getWord(), false);
@@ -206,4 +208,5 @@ public class ExamCommand extends AbstractCommand {
             wordIterator = wordList.iterator();
         }
     }
+
 }

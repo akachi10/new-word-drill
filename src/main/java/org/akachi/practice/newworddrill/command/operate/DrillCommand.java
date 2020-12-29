@@ -1,17 +1,13 @@
 package org.akachi.practice.newworddrill.command.operate;
 
-import org.akachi.practice.newworddrill.Service.NewWordService;
 import org.akachi.practice.newworddrill.command.AbstractCommand;
 import org.akachi.practice.newworddrill.command.ICommand;
 import org.akachi.practice.newworddrill.config.DrillConfig;
-import org.akachi.practice.newworddrill.entity.DrillConstant;
+import org.akachi.practice.newworddrill.constant.DrillConstant;
 import org.akachi.practice.newworddrill.entity.NewWordProxy;
 import org.akachi.practice.newworddrill.util.PlayUtil;
-import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 import org.akachi.practice.newworddrill.util.StringUtil;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -21,8 +17,6 @@ import java.util.*;
  */
 
 public class DrillCommand extends AbstractCommand implements ICommand {
-
-    private NewWordService newWordService = SpringApplicationContextHolder.getBean(NewWordService.class);
 
     private int successDrillCount;
     private int loseDrillCount;
@@ -268,28 +262,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
     }
 
-
-    /**
-     * 爬行训练所有单词
-     */
-    public void crawl() {
-        init();
-        crawltest(-1);
-    }
-
-    /**
-     * 爬行训练某一天
-     */
-    public void crawl(String day) {
-        Integer dayInt = 0;
-        try {
-            dayInt = Integer.parseInt(day);
-        } catch (Exception e) {
-        }
-        init(dayInt);
-        crawltest(dayInt);
-    }
-
     /**
      * 开始测试
      */
@@ -299,110 +271,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             return;
         }
         test(newWordProxy);
-    }
-
-    /**
-     * 爬行训练方法
-     */
-    private void crawltest(int day) {
-        //获取最初训练的n个单词
-        List<NewWordProxy> newWordProxyList = getNewWordProxys(DrillConfig.DRILL_CRAWL_LENGTH);
-        if (newWordProxyList == null || newWordProxyList.size() == 0) {
-            output("当前没有训练单词!");
-            return;
-        }
-        //先获得一个单词
-        NewWordProxy newWordProxy = null;
-        if (newWordProxyList.size() > 0) {
-            Collections.shuffle(newWordProxyList);
-            newWordProxy = newWordProxyList.get(0);
-        }
-        while (true) {
-            if (newWordProxy != null) {
-                //测试单词
-                LocalDateTime ldb = LocalDateTime.now();
-                int testFruit = crawlWord(newWordProxy);
-                LocalDateTime lde = LocalDateTime.now();
-                Duration duration = Duration.between(ldb, lde);
-                int cost = new Long(duration.getSeconds()).intValue();
-                if (testFruit == 0) {
-                    //小于最大重复训练次数
-                    if (cost < DrillConfig.DRILL_CRAWL_TIME && newWordProxy.getDrillCount() == DrillConfig.DRILL_CRAWL_REPEAT) {
-                        //如果对了就继续
-                        //否则remove这个单词
-                        output("'" + newWordProxy.getWord() + "'训练成功训练了" + (newWordProxy.getLoseCount() + DrillConfig.DRILL_CRAWL_REPEAT) + "次.");
-                        output("失败了" + newWordProxy.getLoseCount() + "次.训练通过.");
-                        newWordProxyList.remove(newWordProxy);
-                        List<NewWordProxy> addList = getNewWordProxys(1);
-                        newWordProxyList.addAll(addList);
-                    } else if (cost >= DrillConfig.DRILL_CRAWL_TIME) {
-                        output("耗时" + cost + "秒 ，训练超时。");
-                    }
-
-                    if (newWordProxyList.size() > 0) {
-                        Collections.shuffle(newWordProxyList);
-                        newWordProxy = newWordProxyList.get(0);
-                    }
-                } else if (testFruit == -1) {
-                    //错误重复测试
-                } else if (testFruit == -2) {
-                    crawlReport();
-                    output("爬虫训练结束");
-                    break;
-                } else if (testFruit == -3) {
-                    output("跳过这个单词");
-                    newWordProxyList.remove(newWordProxy);
-                    List<NewWordProxy> addList = getNewWordProxys(1);
-                    newWordProxyList.addAll(addList);
-                }
-            } else {
-                output("全部训练完成现在重置列表");
-                crawlReport();
-                if (day == -1) {
-                    init();
-                } else {
-                    init(day);
-                }
-                newWordProxyList = getNewWordProxys(DrillConfig.DRILL_CRAWL_LENGTH);
-            }
-        }
-    }
-
-    /**
-     * 测试一个单词
-     *
-     * @param newWordProxy 新单词
-     * @return -2 爬虫训练结束 -3 跳过单词 0正常训练
-     */
-    private int crawlWord(NewWordProxy newWordProxy) {
-        output("请输入'" + newWordProxy.getChinese() + "'的单词");
-        String wordTest = input();
-        if (wordTest == null) {
-            wordTest = "";
-        }
-        if (DrillConstant.TEST_END.equals(wordTest)) {
-            output("训练结束!");
-            return -2;
-        } else if (DrillConstant.TEST_CONTINUE.equals(wordTest)) {
-            return -3;
-        }
-        this.examCount++;
-        if (newWordProxy.getWord().equals(wordTest)) {
-            /*测试成功则单词测试次数+1并且清零失败次数*/
-            successDrillCount++;
-            output("正确!");
-            PlayUtil.sound(newWordProxy.getWord(), false);
-            newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
-        } else {
-            loseDrillCount++;
-            output("错误!正确的单词是'" + newWordProxy.getWord() + "'。");
-            if (newWordProxy.getDrillCount() > 0) {
-                newWordProxy.setDrillCount(newWordProxy.getDrillCount() - 2);
-            }
-            newWordProxy.setLoseCount(newWordProxy.getLoseCount() + 1);
-            return -1;
-        }
-        return 0;
     }
 
     /**
@@ -448,6 +316,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
     private void test(NewWordProxy newWordProxy, List<Integer> seed) {
         progress();
         if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+            this.dictionary(newWordProxy.getWord(), newWordProxy.getChinese());
             output("请输入'" + newWordProxy.getChinese() + "'的单词");
         } else {
             output("请听写单词");
@@ -461,6 +330,8 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         this.examCount++;
         if (newWordProxy.getWord().equals(wordTest)) {
+            /*打印例句*/
+            example(newWordProxy.getWord());
             /*测试成功则单词测试次数+1并且清零失败次数*/
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
             if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
@@ -520,6 +391,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             return;
         }
         //在这里打印正确答案
+        this.dictionary(newWordProxy.getWord(), newWordProxy.getChinese());
         output("正确翻译是'" + newWordProxy.getChinese() + "'，您们的翻译是" + wordTest + "");
         String flag = null;
         if (!newWordProxy.getChinese().equals(wordTest)) {
@@ -532,10 +404,12 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
             this.successDrillCount++;
-            output("正确翻译!");
+            /*打印例句*/
+            example(newWordProxy.getWord());
+            output("正确!");
             renext();
         } else {
-            output("错误翻译!");
+            output("错误!");
             /*如果测试失败记录失败次数并且递归重新测试*/
             this.loseDrillCount++;
             if (loseWord.get(newWordProxy) != null) {
@@ -592,26 +466,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         this.examCount = 0;
     }
 
-
-    /**
-     * 爬虫报告
-     */
-    private void crawlReport() {
-        if (loseDrillCount + this.successDrillCount != 0) {
-            float accuracy = (this.successDrillCount + 0) / (this.loseDrillCount + this.successDrillCount + 0f);
-            int i = 0;
-            output("#######################爬虫训练报告##########################");
-            output("本次测试正确率为" + StringUtil.format2(accuracy * 100) + "%");
-            output("成功数" + this.successDrillCount + ",失败数" + this.loseDrillCount + ".");
-            output("###########################################################");
-            this.loseDrillCount = 0;
-            this.successDrillCount = 0;
-        }
-        this.examCount = 0;
-        //爬虫训练并不关心错误单词
-//        loseWord.clear();
-    }
-
     /**
      * 随机洗牌
      */
@@ -622,4 +476,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             wordIterator = wordList.iterator();
         }
     }
+
+
 }

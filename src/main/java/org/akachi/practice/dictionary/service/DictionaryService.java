@@ -21,10 +21,12 @@ public interface DictionaryService {
     String explain(String phrase);
 
     /**
-     * 翻译词典
+     * 获得英文例句
      *
      * @param phrase 单词或句子
      * @return 单词或句子以及联想内容
      */
     List<String> explainWeb(String phrase);
+
+
 }
