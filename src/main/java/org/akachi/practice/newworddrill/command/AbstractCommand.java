@@ -217,7 +217,6 @@ public abstract class AbstractCommand implements ICommand {
     }
 
 
-
     /**
      * 词典翻译
      *
@@ -226,10 +225,12 @@ public abstract class AbstractCommand implements ICommand {
      */
     protected void dictionary(String word, String chinese) {
         String dictionary = explain(word);
-        if (!dictionary.equals(chinese)) {
-            output(ANNOTATION+"词典翻译"+ANNOTATION);
+        if (chinese != null && dictionary != null && !dictionary.equals(chinese)) {
+            output(ANNOTATION + "词典翻译" + ANNOTATION);
             output(dictionary);
-            output(ANNOTATION+"========"+ANNOTATION);
+            output(ANNOTATION + "========" + ANNOTATION);
+        } else {
+//            output(chinese + ":未查询到词典。");
         }
     }
 
