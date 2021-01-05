@@ -49,10 +49,11 @@ public class WordController {
      * @return json文件
      */
     @RequestMapping("/getTranslator")
-    public void getTranslator(HttpServletResponse response, String word) {
-        File file = youdaoDictionaryService.downloadJson(word);
-
-        downFile(file, response);
+    public String getTranslator(String word) {
+        if (youdaoDictionaryService.getJsonObject(word) != null) {
+            return youdaoDictionaryService.getJsonObject(word).toString();
+        }
+        return null;
     }
 
     /**

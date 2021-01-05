@@ -21,6 +21,14 @@ public interface DictionaryService {
     String explain(String phrase);
 
     /**
+     * 获得音标
+     *
+     * @param word 单词
+     * @return 返回值、只有单词有音标
+     */
+    String phonetic(String word);
+
+    /**
      * 获得英文例句
      *
      * @param phrase 单词或句子

@@ -8,6 +8,7 @@ package org.akachi.practice.dictionary.controller;
 public class YoudaoConstant {
     public static String BASIC = "basic";
     public static String BASIC_EXPLAINS = "explains";
+    public static String PHONETIC = "us-phonetic";
     public static String ERRORCODE = "errorCode";
     public static String TRANSLATION = "translation";
     public static int ERRORCODE_SUCCESS = 0;

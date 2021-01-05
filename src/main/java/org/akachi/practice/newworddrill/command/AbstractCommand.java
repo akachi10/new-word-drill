@@ -7,6 +7,7 @@ import org.akachi.practice.newworddrill.config.DrillConfig;
 import org.akachi.practice.newworddrill.constant.DrillConstant;
 import org.akachi.practice.newworddrill.util.SpringApplicationContextHolder;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -129,6 +130,9 @@ public abstract class AbstractCommand implements ICommand {
      * @param output 输出内容
      */
     public void output(String output) {
+        if (output == null) {
+            return;
+        }
         System.out.println("[" + getSimpleName() + "]:" + output);
     }
 
@@ -200,19 +204,20 @@ public abstract class AbstractCommand implements ICommand {
      * @param phrase 单词或短语
      */
     protected void example(String phrase) {
-        try {
-            List<String> list = dictionaryService.explainWeb(phrase);
-            if (list == null && list.size() == 0) {
-                return;
-            }
-            output("例子:");
-            list.forEach(
-                    example -> {
-                        output(example);
-                    }
-            );
-        } catch (NullPointerException e) {
-            output("未查询到例子:");
+        List<String> list = dictionaryService.explainWeb(phrase);
+        if (list == null || list.size() == 0) {
+            return;
+        }
+        output("例子:");
+        list.forEach(
+                example -> {
+                    output(example);
+                }
+        );
+        String phonetic = dictionaryService.phonetic(phrase);
+        if (phonetic != null) {
+            /*因为微软dos灾难性的编码格式导致音标无法显示*/
+//                output("音标:" + new String(phonetic.getBytes(),"GBK"));
         }
     }
 
@@ -226,9 +231,7 @@ public abstract class AbstractCommand implements ICommand {
     protected void dictionary(String word, String chinese) {
         String dictionary = explain(word);
         if (chinese != null && dictionary != null && !dictionary.equals(chinese)) {
-            output(ANNOTATION + "词典翻译" + ANNOTATION);
-            output(dictionary);
-            output(ANNOTATION + "========" + ANNOTATION);
+            output("词典翻译:" + dictionary);
         } else {
 //            output(chinese + ":未查询到词典。");
         }

@@ -23,6 +23,19 @@ import java.util.List;
 public class YoudaoDictionaryService implements DictionaryService {
 
     @Override
+    public String phonetic(String word) {
+        JsonObject jsonObject = getJsonObject(word);
+        if (jsonObject == null
+                || jsonObject.getAsJsonObject(YoudaoConstant.BASIC) == null
+                || jsonObject.getAsJsonObject(YoudaoConstant.BASIC).getAsJsonPrimitive(YoudaoConstant.PHONETIC) == null
+        ) {
+            return null;
+        }
+        String phonetic = jsonObject.getAsJsonObject(YoudaoConstant.BASIC).getAsJsonPrimitive(YoudaoConstant.PHONETIC).getAsString();
+        return phonetic;
+    }
+
+    @Override
     public String explain(String phrase) {
         JsonObject jsonObject = getJsonObject(phrase);
         if (jsonObject == null ||
@@ -41,15 +54,25 @@ public class YoudaoDictionaryService implements DictionaryService {
 
     @Override
     public List<String> explainWeb(String phrase) {
-        JsonObject jsonObject = getJsonObject(phrase);
-        JsonArray web = jsonObject.getAsJsonArray("web");
-        List<String> list = new ArrayList<>();
-        for (JsonElement elment : web) {
-            String key = elment.getAsJsonObject().getAsJsonPrimitive("key").getAsString();
-            String value = elment.getAsJsonObject().getAsJsonArray("value").toString();
-            list.add(key + ";翻译:" + value);
+        try {
+            JsonObject jsonObject = getJsonObject(phrase);
+            if (jsonObject == null) {
+                return null;
+            }
+            JsonArray web = jsonObject.getAsJsonArray("web");
+            if (web != null && web.size() > 0) {
+                List<String> list = new ArrayList<>();
+                for (JsonElement elment : web) {
+                    String key = elment.getAsJsonObject().getAsJsonPrimitive("key").getAsString();
+                    String value = elment.getAsJsonObject().getAsJsonArray("value").toString();
+                    list.add(key + ";翻译:" + value);
+                }
+                return list;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return list;
+        return null;
     }
 
     /**
@@ -58,10 +81,17 @@ public class YoudaoDictionaryService implements DictionaryService {
      * @param phrase 请求
      * @return 返回值
      */
-    private JsonObject getJsonObject(String phrase) {
+    public JsonObject getJsonObject(String phrase) {
         File file = downloadJson(phrase);
         String json = FileUtil.getFileString(file);
-        return new JsonParser().parse(json).getAsJsonObject();
+        JsonObject jsonObject = null;
+        try {
+            jsonObject = new JsonParser().parse(json).getAsJsonObject();
+        } catch (Exception e) {
+
+            file.delete();
+        }
+        return jsonObject;
     }
 
 
@@ -84,11 +114,11 @@ public class YoudaoDictionaryService implements DictionaryService {
      * @param word 存储单词
      * @return 返回json
      */
-    public File downloadJson(String word) {
+    private File downloadJson(String word) {
         String urlWord = StringUtil.replaceUrl(word);
         String saveWord = StringUtil.replaceSaveFileName(word);
         String wordFileName = saveWord + DrillConstant.JSON_SUFFIX;
-        String url = DrillConfig.DRILL_WORD_EXPLAIN_DICTIONARY_URL + urlWord;
+        String url = getDictionaryUrl() + urlWord;
         File file = null;
         try {
             file = HttpUtil.downloadNet(url, DrillConfig.JSON_PATH, wordFileName);
@@ -104,4 +134,18 @@ public class YoudaoDictionaryService implements DictionaryService {
         return null;
     }
 
+    /**
+     * 获得词典地址
+     *
+     * @return
+     */
+    private String getDictionaryUrl() {
+        String url = DrillConfig.DICTIONARY_URL;
+        String[] keyFroms = DrillConfig.DICTIONARY_KEYFROM.split(",");
+        String[] keys = DrillConfig.DICTIONARY_KEY.split(",");
+        Integer rand = new Double(Math.random() * keyFroms.length).intValue();
+        url = url.replace("$keyfrom", keyFroms[rand]);
+        url = url.replace("$key", keys[rand]);
+        return url;
+    }
 }

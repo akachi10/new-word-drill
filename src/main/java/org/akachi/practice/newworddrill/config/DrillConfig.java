@@ -29,7 +29,9 @@ public class DrillConfig {
     public static Integer AUDIO_START_TIME;
     public static Boolean AUDIO_START_PLAY;
     public static Integer AUDIO_PLAY_COUNT;
-    public static String DRILL_WORD_EXPLAIN_DICTIONARY_URL;
+    public static String DICTIONARY_URL;
+    public static String DICTIONARY_KEY;
+    public static String DICTIONARY_KEYFROM;
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -127,7 +129,17 @@ public class DrillConfig {
     }
 
     @Value("${drill.word.explain.dictionary.url}")
-    public void setDRILL_WORD_EXPLAIN_DICTIONARY_URL(String DRILL_WORD_EXPLAIN_DICTIONARY_URL) {
-        this.DRILL_WORD_EXPLAIN_DICTIONARY_URL = DRILL_WORD_EXPLAIN_DICTIONARY_URL;
+    public void setDICTIONARY_URL(String DICTIONARY_URL) {
+        this.DICTIONARY_URL = DICTIONARY_URL;
+    }
+
+    @Value("${drill.word.explain.dictionary.key}")
+    public void setDICTIONARY_KEY(String DICTIONARY_KEY) {
+        this.DICTIONARY_KEY = DICTIONARY_KEY;
+    }
+
+    @Value("${drill.word.explain.dictionary.keyfrom}")
+    public void setDICTIONARY_KEYFROM(String DICTIONARY_KEYFROM) {
+        this.DICTIONARY_KEYFROM = DICTIONARY_KEYFROM;
     }
 }

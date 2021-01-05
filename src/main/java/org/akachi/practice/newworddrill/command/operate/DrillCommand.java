@@ -392,11 +392,13 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         //在这里打印正确答案
         this.dictionary(newWordProxy.getWord(), newWordProxy.getChinese());
+        /*打印例句*/
+        example(newWordProxy.getWord());
         output("正确翻译是'" + newWordProxy.getChinese() + "'，您们的翻译是" + wordTest + "");
         String flag = null;
         if (!newWordProxy.getChinese().equals(wordTest)) {
             PlayUtil.sound(newWordProxy.getWord(), false);
-            flag = input("如果输入正确请直接回车");
+//            flag = input("如果输入正确请直接回车");
         }
         this.examCount++;
         if (null == flag || "".equals(flag)) {
@@ -404,8 +406,6 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
             /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
             this.successDrillCount++;
-            /*打印例句*/
-            example(newWordProxy.getWord());
             output("正确!");
             renext();
         } else {
