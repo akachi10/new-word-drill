@@ -92,7 +92,7 @@ public class ExamCommand extends AbstractCommand {
             output("本次测试一共有" + wordList.size() + "个单词,已经完成" + (successWord.size() + loseWord.size()) + "个测试。如果要结束测试输入'" + DrillConstant.TEST_END + "'!");
         }
         if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
-            this.dictionary(newWordProxy.getWord(),newWordProxy.getChinese());
+            this.dictionary(newWordProxy.getWord(), newWordProxy.getChinese());
             output("请输入'" + newWordProxy.getChinese() + "'的单词");
         } else {
             output("请听写单词");
