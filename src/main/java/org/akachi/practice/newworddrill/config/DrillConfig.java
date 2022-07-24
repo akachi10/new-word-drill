@@ -3,6 +3,9 @@ package org.akachi.practice.newworddrill.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Author akachi
  * @Email zsts@hotmail.com
@@ -32,6 +35,7 @@ public class DrillConfig {
     public static String DICTIONARY_URL;
     public static String DICTIONARY_KEY;
     public static String DICTIONARY_KEYFROM;
+    public static List<Integer> DRILL_CRAWL_ARRAY = new ArrayList<>();
 
     @Value("${drill.magnitude}")
     public void setMagnitude(Float MAGNITUDE) {
@@ -58,25 +62,25 @@ public class DrillConfig {
         this.DRILL_DEFAULT_FUNCTION = DRILL_DEFAULT_FUNCTION;
     }
 
-    @Value("${drill.crawlLength}")
-    public void setDrillCrawlLength(Integer DRILL_CRAWL_LENGTH) {
-        this.DRILL_CRAWL_LENGTH = DRILL_CRAWL_LENGTH;
-    }
+//    @Value("${drill.crawlLength}")
+//    public void setDrillCrawlLength(Integer DRILL_CRAWL_LENGTH) {
+//        this.DRILL_CRAWL_LENGTH = DRILL_CRAWL_LENGTH;
+//    }
 
-    @Value("${drill.crawlRepeat}")
-    public void setDrillCrawlRepeat(Integer DRILL_CRAWL_REPEAT) {
-        this.DRILL_CRAWL_REPEAT = DRILL_CRAWL_REPEAT;
-    }
+//    @Value("${drill.crawlRepeat}")
+//    public void setDrillCrawlRepeat(Integer DRILL_CRAWL_REPEAT) {
+//        this.DRILL_CRAWL_REPEAT = DRILL_CRAWL_REPEAT;
+//    }
 
     @Value("${drill.default.flag}")
     public void setFLAG(String flag) {
         this.FLAG = flag;
     }
 
-    @Value("${drill.crawlTime}")
-    public void setFLAG(Integer drillCrawlTime) {
-        this.DRILL_CRAWL_TIME = drillCrawlTime;
-    }
+//    @Value("${drill.crawlTime}")
+//    public void setFLAG(Integer drillCrawlTime) {
+//        this.DRILL_CRAWL_TIME = drillCrawlTime;
+//    }
 
     @Value("${drill.sound.prefix}")
     public void setSOUND_PREFIX(String SOUND_PREFIX) {
@@ -141,5 +145,13 @@ public class DrillConfig {
     @Value("${drill.word.explain.dictionary.keyfrom}")
     public void setDICTIONARY_KEYFROM(String DICTIONARY_KEYFROM) {
         this.DICTIONARY_KEYFROM = DICTIONARY_KEYFROM;
+    }
+
+    @Value("${drill.crawl.array}")
+    public void setDRILL_CRAWL_ARRAY(String DRILL_CRAWL_ARRAY) {
+        String[] strArray = DRILL_CRAWL_ARRAY.split(",");
+        for (int i = 0; i < strArray.length; i++) {
+            this.DRILL_CRAWL_ARRAY.add(Integer.parseInt(strArray[i]));
+        }
     }
 }

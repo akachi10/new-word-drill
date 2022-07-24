@@ -15,7 +15,6 @@ import java.util.*;
  * @Email zsts@hotmail.com
  * @Date 2020/10/1 19:54
  */
-
 public class DrillCommand extends AbstractCommand implements ICommand {
 
     private int successDrillCount;
@@ -136,6 +135,135 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         }
         init(dayInt);
         next();
+    }
+
+    /**
+     * 训练某一天
+     *
+     * @param day
+     */
+    public void crawl(String day) {
+        Integer dayInt = 0;
+        try {
+            dayInt = Integer.parseInt(day);
+        } catch (Exception e) {
+        }
+        init(dayInt);
+        nextCrawl();
+    }
+
+    /**
+     * 开始测试下一个
+     */
+    private void nextCrawl() {
+        List<Integer> listInteger = DrillConfig.DRILL_CRAWL_ARRAY;
+        //取消超过
+        for (int i = 0; i < DrillConfig.DRILL_CRAWL_ARRAY.size(); i++) {
+            Integer integer = listInteger.get(i);
+            if (integer.intValue() >= wordList.size()) {
+                listInteger.remove(i);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < DrillConfig.DRILL_CRAWL_ARRAY.size(); i++) {
+
+        }
+
+
+//            if (newWordProxy == null) {
+//            return;
+//        }
+//        nextCrawl(newWordProxy);
+    }
+
+
+    public static void main(String[] args) {
+        DrillConfig drillConfig = new DrillConfig();
+        drillConfig.setDRILL_CRAWL_ARRAY("0,1,2,3,4,6,9");
+        List<Integer> listInteger = DrillConfig.DRILL_CRAWL_ARRAY;
+        //取消超过
+        for (int i = 0; i < DrillConfig.DRILL_CRAWL_ARRAY.size(); i++) {
+            Integer integer = listInteger.get(i);
+            if (integer.intValue() >= 20) {
+                listInteger.remove(i);
+                i--;
+            }
+        }
+        int j = 0;
+        for (int i = 0; i < listInteger.size(); i++) {
+            if (listInteger.get(i) - listInteger.get(i) == 0) {
+                j += (listInteger.get(i) - listInteger.get(i - 1));
+            }
+            System.out.println(j);
+        }
+    }
+
+    /**
+     * 测试主方法
+     *
+     * @param newWordProxy
+     */
+    private void nextCrawl(NewWordProxy newWordProxy) {
+        List<Integer> seed = new ArrayList<>();
+        nextCrawl(newWordProxy, seed);
+    }
+
+    /**
+     * 测试单词
+     *
+     * @param newWordProxy
+     */
+    private void nextCrawl(NewWordProxy newWordProxy, List<Integer> seed) {
+        progress();
+        if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+            this.dictionary(newWordProxy.getWord(), newWordProxy.getChinese());
+        } else {
+            output("请输入'" + newWordProxy.getChinese() + "'的单词");
+            output("请听写单词");
+            PlayUtil.sound(newWordProxy.getWord(), this.isWait);
+            this.isWait = false;
+        }
+        String wordTest = input();
+        if (DrillConstant.TEST_END.equals(wordTest)) {
+            testReport();
+            return;
+        }
+        this.examCount++;
+        if (newWordProxy.getWord().equals(wordTest)) {
+            /*打印例句*/
+            example(newWordProxy.getWord());
+            /*测试成功则单词测试次数+1并且清零失败次数*/
+            newWordProxy.setDrillCount(newWordProxy.getDrillCount() + 1);
+            if (newWordProxy.getLoseCount() >= DrillConfig.AUDIO_PLAY_COUNT) {
+                PlayUtil.sound(newWordProxy.getWord(), false);
+                this.isWait = true;
+                output("正确!");
+            } else {
+                output("正确听写'" + newWordProxy.getChinese() + "'");
+            }
+            /*如果这输入正确时计数器中的失败次数超过或等于最小失败次数则测试失败*/
+            if (newWordProxy.getLoseCount() >= DrillConfig.LOSE_MIN_COUNT) {
+                this.loseDrillCount++;
+                if (loseWord.get(newWordProxy) != null) {
+                    loseWord.put(newWordProxy, loseWord.get(newWordProxy) + 1);
+                } else {
+                    loseWord.put(newWordProxy, 1);
+                }
+            } else {
+                this.successDrillCount++;
+            }
+            newWordProxy.setLoseCount(0);
+            nextCrawl();
+        } else {
+            /*如果测试失败记录失败次数并且递归重新测试*/
+            output("错误请重新输入");
+            newWordProxy.setLoseCount(newWordProxy.getLoseCount() + 1);
+            /*判断是否需要提示*/
+            hint(newWordProxy, seed);
+            /*测试*/
+            nextCrawl(newWordProxy, seed);
+        }
     }
 
     /**
@@ -398,7 +526,7 @@ public class DrillCommand extends AbstractCommand implements ICommand {
         String flag = null;
         if (!newWordProxy.getChinese().equals(wordTest)) {
             PlayUtil.sound(newWordProxy.getWord(), false);
-//            flag = input("如果输入正确请直接回车");
+            //flag = input("如果输入正确请直接回车");
         }
         this.examCount++;
         if (null == flag || "".equals(flag)) {
@@ -476,6 +604,4 @@ public class DrillCommand extends AbstractCommand implements ICommand {
             wordIterator = wordList.iterator();
         }
     }
-
-
 }
